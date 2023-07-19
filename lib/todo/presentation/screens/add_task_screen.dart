@@ -54,6 +54,15 @@ class AddTaskScreen extends StatelessWidget {
             color: MyApp.isDark ? Colors.white : AppColor.darkGreyColor,
           ),
         ),
+        actions: const [
+          CircleAvatar(
+            backgroundImage: AssetImage('assets/images/person.jpeg'),
+            radius: 20.0,
+          ),
+          SizedBox(
+            width: 20.0,
+          )
+        ],
       ),
       backgroundColor: context.theme.colorScheme.background,
       body: BlocProvider<AddTaskBloc>(

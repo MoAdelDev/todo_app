@@ -8,3 +8,9 @@ abstract class HomeBaseEvent extends Equatable {
 }
 
 class HomeChnageThemeModeEvent extends HomeBaseEvent {}
+
+class HomeChangeDateTimeEvent extends HomeBaseEvent {
+  final DateTime dateTime;
+
+  const HomeChangeDateTimeEvent(this.dateTime);
+}

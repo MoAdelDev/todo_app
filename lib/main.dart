@@ -27,7 +27,6 @@ class MyApp extends StatelessWidget {
       create: (context) => HomeBloc(),
       child: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
-          print(isDark);
           return GetMaterialApp(
             debugShowCheckedModeBanner: false,
             theme: Themes.light,

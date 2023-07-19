@@ -10,13 +10,19 @@ part 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeBaseEvent, HomeState> {
   HomeBloc() : super(const HomeState()) {
-    on<HomeBaseEvent>(_changeThemeMode);
+    on<HomeChnageThemeModeEvent>(_changeThemeMode);
+    on<HomeChangeDateTimeEvent>(_changeDateTime);
   }
 
   FutureOr<void> _changeThemeMode(
-      HomeBaseEvent event, Emitter<HomeState> emit) {
+      HomeChnageThemeModeEvent event, Emitter<HomeState> emit) {
     MyApp.isDark = !MyApp.isDark;
     CacheService.saveData(key: 'isDark', value: MyApp.isDark);
     emit(state.copywith(isDark: !state.isDark));
+  }
+
+  FutureOr<void> _changeDateTime(
+      HomeChangeDateTimeEvent event, Emitter<HomeState> emit) {
+    emit(state.copywith(dateTime: event.dateTime));
   }
 }

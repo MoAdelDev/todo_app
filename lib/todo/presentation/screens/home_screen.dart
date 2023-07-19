@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
-import 'package:todo/core/components/button.dart';
-import 'package:todo/core/components/text_field.dart';
 import 'package:todo/core/style/colors.dart';
 import 'package:todo/main.dart';
 import 'package:todo/todo/presentation/controller/home/home_bloc.dart';
-import 'package:todo/todo/presentation/screens/add_task_screen.dart';
+import 'package:todo/todo/presentation/widgets/add_date_bar_widget.dart';
+import 'package:todo/todo/presentation/widgets/add_task_bar_widget.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -15,8 +14,8 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<HomeBloc, HomeState>(
       builder: (context, state) {
-        print('aaaa');
         return Scaffold(
+          backgroundColor: context.theme.colorScheme.background,
           appBar: AppBar(
             leading: IconButton(
               onPressed: () async {
@@ -39,27 +38,23 @@ class HomeScreen extends StatelessWidget {
               )
             ],
           ),
-          body: SizedBox(
+          body: const SizedBox(
             width: double.infinity,
             height: double.infinity,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                DefaultButton(
-                  onTap: () {
-                    Get.to(AddTaskScreen());
-                  },
-                  lable: 'Add task',
-                ),
-                const SizedBox(
-                  height: 10.0,
-                ),
-                DefaultTextField(
-                  title: 'Task',
-                  note: 'This is note',
-                  controller: TextEditingController(),
-                )
-              ],
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: 15.0,
+                vertical: 10.0,
+              ),
+              child: Column(
+                children: [
+                  AddTaskBarWidget(),
+                  SizedBox(
+                    height: 8.0,
+                  ),
+                  AddDateBarWidget(),
+                ],
+              ),
             ),
           ),
         );
