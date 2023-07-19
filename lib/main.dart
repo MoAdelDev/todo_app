@@ -13,7 +13,7 @@ void main() async {
 
   LocatorService().init();
   await CacheService.init();
-
+  //await NotificationsService().init();
   runApp(const MyApp());
 }
 

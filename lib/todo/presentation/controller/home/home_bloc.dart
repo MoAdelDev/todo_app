@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:todo/core/services/cache_service.dart';
 import 'package:todo/main.dart';
+import 'package:todo/todo/domain/entities/task.dart';
 
 part 'home_event.dart';
 part 'home_state.dart';
