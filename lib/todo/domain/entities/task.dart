@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 class Task extends Equatable {
+  final int id;
   final String title;
   final String note;
   final bool isCompleted;
@@ -10,6 +11,7 @@ class Task extends Equatable {
   final Color color;
 
   const Task(
+    this.id,
     this.title,
     this.note,
     this.isCompleted,
@@ -20,6 +22,7 @@ class Task extends Equatable {
 
   @override
   List<Object?> get props => [
+        id,
         title,
         note,
         isCompleted,

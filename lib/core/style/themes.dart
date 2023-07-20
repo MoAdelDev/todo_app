@@ -97,7 +97,7 @@ class Themes {
 
   static TextStyle get body2Style => GoogleFonts.lato(
         textStyle: TextStyle(
-          fontSize: 14,
+          fontSize: 10,
           fontWeight: FontWeight.w400,
           color: MyApp.isDark ? Colors.grey : Colors.black,
         ),

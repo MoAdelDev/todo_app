@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => HomeBloc(),
+      create: (context) => HomeBloc()..add(HomeGetTasksEvent()),
       child: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
           return GetMaterialApp(

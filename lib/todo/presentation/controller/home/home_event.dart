@@ -14,3 +14,7 @@ class HomeChangeDateTimeEvent extends HomeBaseEvent {
 
   const HomeChangeDateTimeEvent(this.dateTime);
 }
+
+class HomeShowBottomSheetEvent extends HomeBaseEvent {}
+
+class HomeGetTasksEvent extends HomeBaseEvent {}

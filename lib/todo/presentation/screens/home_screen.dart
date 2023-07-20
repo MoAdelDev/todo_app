@@ -21,6 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+
     notificationsService = NotificationsService();
     notificationsService.init();
     notificationsService.requestIosPermision();
@@ -36,10 +37,6 @@ class _HomeScreenState extends State<HomeScreen> {
             leading: IconButton(
               onPressed: () async {
                 context.read<HomeBloc>().add(HomeChnageThemeModeEvent());
-                notificationsService.displayNotification(
-                    title: 'Hello World', body: 'Hello');
-                notificationsService.scheduledNotification(
-                    title: 'Hello World', body: 'Hello');
               },
               icon: Icon(
                 MyApp.isDark
@@ -58,25 +55,28 @@ class _HomeScreenState extends State<HomeScreen> {
               )
             ],
           ),
-          body: const SizedBox(
+          body: SizedBox(
             width: double.infinity,
             height: double.infinity,
             child: Padding(
-              padding: EdgeInsets.symmetric(
+              padding: const EdgeInsets.symmetric(
                 horizontal: 15.0,
                 vertical: 10.0,
               ),
               child: Column(
                 children: [
-                  AddTaskBarWidget(),
-                  SizedBox(
+                  const AddTaskBarWidget(),
+                  const SizedBox(
                     height: 8.0,
                   ),
-                  AddDateBarWidget(),
-                  SizedBox(
+                  const AddDateBarWidget(),
+                  const SizedBox(
                     height: 8.0,
                   ),
-                  Expanded(child: TasksWidget()),
+                  Expanded(
+                      child: TasksWidget(
+                    notificationsService: notificationsService,
+                  )),
                 ],
               ),
             ),
