@@ -19,7 +19,7 @@ class NotificationsService {
   Future init() async {
     tz.initializeTimeZones();
     _configureSelectNotificationSubject();
-    await _configureLocalTimeZone();
+    //await _configureLocalTimeZone();
 
     AndroidInitializationSettings initializationSettingsAndroid =
         const AndroidInitializationSettings('appicon');
@@ -126,6 +126,7 @@ class NotificationsService {
     });
   }
 
+  // ignore: unused_element
   Future<void> _configureLocalTimeZone() async {
     tz.initializeTimeZones();
     final String timeZoneName = DateTime.now().timeZoneName;

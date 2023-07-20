@@ -12,6 +12,24 @@ class AddTaskSelectRemindEvent extends AddTaskBaseEvent {
   const AddTaskSelectRemindEvent(this.remind);
 }
 
+class AddTaskChangeDateEvent extends AddTaskBaseEvent {
+  final String dateTime;
+
+  const AddTaskChangeDateEvent(this.dateTime);
+}
+
+class AddTaskChangeStartTimeEvent extends AddTaskBaseEvent {
+  final String time;
+
+  const AddTaskChangeStartTimeEvent(this.time);
+}
+
+class AddTaskChangeEndTimeEvent extends AddTaskBaseEvent {
+  final String time;
+
+  const AddTaskChangeEndTimeEvent(this.time);
+}
+
 class AddTaskSelectRepeatEvent extends AddTaskBaseEvent {
   final String repeat;
 
@@ -22,4 +40,9 @@ class AddTaskSelectColorEvent extends AddTaskBaseEvent {
   final Color taskColor;
 
   const AddTaskSelectColorEvent(this.taskColor);
+}
+
+class AddTaskInsertEvent extends AddTaskBaseEvent {
+  final Task task;
+  const AddTaskInsertEvent(this.task);
 }

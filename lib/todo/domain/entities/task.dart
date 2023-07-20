@@ -1,23 +1,28 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 
 class Task extends Equatable {
   final int id;
   final String title;
   final String note;
   final bool isCompleted;
+  final String dueDate;
   final String startTime;
   final String endTime;
-  final Color color;
+  final int color;
+  final String repeat;
+  final String remind;
 
   const Task(
     this.id,
     this.title,
     this.note,
     this.isCompleted,
+    this.dueDate,
     this.startTime,
     this.endTime,
     this.color,
+    this.remind,
+    this.repeat,
   );
 
   @override
@@ -29,5 +34,6 @@ class Task extends Equatable {
         startTime,
         endTime,
         color,
+        dueDate,
       ];
 }

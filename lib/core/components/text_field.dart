@@ -9,12 +9,15 @@ class DefaultTextField extends StatelessWidget {
 
   final TextEditingController controller;
   final Widget? widget;
-  const DefaultTextField(
-      {super.key,
-      required this.title,
-      required this.note,
-      required this.controller,
-      this.widget});
+  final Function()? onTap;
+  const DefaultTextField({
+    super.key,
+    required this.title,
+    required this.note,
+    required this.controller,
+    this.widget,
+    this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -33,10 +36,13 @@ class DefaultTextField extends StatelessWidget {
           ),
           TextFormField(
             controller: controller,
+            keyboardType: TextInputType.multiline,
+            maxLines: null,
             autofocus: false,
             readOnly: widget != null ? true : false,
             cursorColor: Get.isDarkMode ? Colors.grey[100] : Colors.grey[700],
             style: Themes.subTitleStyle,
+            onTap: onTap,
             decoration: InputDecoration(
               hintText: note,
               hintStyle: Themes.subTitleStyle,

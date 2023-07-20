@@ -8,27 +8,37 @@ import 'package:todo/core/style/colors.dart';
 import 'package:todo/core/style/themes.dart';
 import 'package:intl/intl.dart';
 import 'package:todo/main.dart';
+import 'package:todo/todo/domain/entities/task.dart';
 import 'package:todo/todo/presentation/controller/add_task/add_task_bloc.dart';
 
 class AddTaskScreen extends StatelessWidget {
-  final List<String> titles = const ['Title', 'Note', 'Date'];
+  final List<String> titles = const [
+    'Title',
+    'Note',
+  ];
   final List<String> hints = [
     'Enter title here',
     'Enter note here',
-    DateFormat('dd/MM/yyyy').format(DateTime.now()).toString(),
   ];
 
   final List<TextEditingController> controllers = [
     TextEditingController(),
     TextEditingController(),
-    TextEditingController(),
   ];
 
-  final TextEditingController startTimeController = TextEditingController();
-  final TextEditingController endTimeController = TextEditingController();
+  final TextEditingController dateController = TextEditingController(
+      text: DateFormat('dd/MM/yyyy').format(DateTime.now()).toString());
 
-  final TextEditingController remindController = TextEditingController();
-  final TextEditingController repeatController = TextEditingController();
+  final TextEditingController startTimeController =
+      TextEditingController(text: DateFormat('h:mm').format(DateTime.now()));
+  final TextEditingController endTimeController = TextEditingController(
+      text: DateFormat('h:mm')
+          .format(DateTime.now().copyWith(minute: DateTime.now().minute + 10)));
+
+  final TextEditingController remindController =
+      TextEditingController(text: '5');
+  final TextEditingController repeatController =
+      TextEditingController(text: 'None');
 
   final List<int> reminds = [5, 10, 15, 50, 25];
   final List<String> repeats = ['None', 'Daily', 'Weekly', 'Monthly'];
@@ -99,23 +109,107 @@ class AddTaskScreen extends StatelessWidget {
                           ),
                         ),
                       ),
+                      DefaultTextField(
+                        title: 'Due Date',
+                        note: state.dateTime == ''
+                            ? DateFormat('dd/MM/yyyy')
+                                .format(DateTime.now())
+                                .toString()
+                            : state.dateTime,
+                        controller: dateController,
+                        onTap: () async {
+                          DateTime? newDate = await showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime(2021),
+                            lastDate: DateTime(2030),
+                          );
+
+                          if (newDate == null) return;
+
+                          if (context.mounted) {
+                            String date = DateFormat('dd/MM/yyyy')
+                                .format(newDate)
+                                .toString();
+                            dateController.text = date;
+                            context
+                                .read<AddTaskBloc>()
+                                .add(AddTaskChangeDateEvent(date));
+                          }
+                        },
+                        widget: const Icon(Icons.date_range),
+                      ),
                       Row(
                         children: [
                           Expanded(
                             child: DefaultTextField(
                               title: 'Start Time',
-                              note: DateFormat('h:mm').format(DateTime.now()),
-                              controller: startTimeController,
+                              note: state.startTime == ''
+                                  ? DateFormat('h:mm').format(
+                                      DateTime.now().copyWith(
+                                        minute: DateTime.now().minute + 10,
+                                      ),
+                                    )
+                                  : state.startTime,
+                              controller: startTimeController
+                                ..text = state.startTime == ''
+                                    ? DateFormat('h:mm').format(
+                                        DateTime.now().copyWith(
+                                          minute: DateTime.now().minute + 10,
+                                        ),
+                                      )
+                                    : state.startTime,
                               widget: const Icon(Icons.access_alarm),
+                              onTap: () async {
+                                TimeOfDay? newTime = await showTimePicker(
+                                  context: context,
+                                  initialTime: TimeOfDay.now(),
+                                );
+                                if (newTime == null) return;
+                                if (context.mounted) {
+                                  String time = DateFormat('h:mm').format(
+                                      DateTime.now().copyWith(
+                                          minute: newTime.minute,
+                                          hour: newTime.hour));
+                                  startTimeController.text = time;
+                                  context
+                                      .read<AddTaskBloc>()
+                                      .add(AddTaskChangeStartTimeEvent(time));
+                                }
+                              },
                             ),
                           ),
                           Expanded(
                             child: DefaultTextField(
                               title: 'End Time',
-                              note: DateFormat('h:mm').format(
-                                  DateTime.fromMillisecondsSinceEpoch(10000)),
-                              controller: startTimeController,
+                              note: state.endTime == ''
+                                  ? DateFormat('h:mm').format(
+                                      DateTime.now().copyWith(
+                                        minute: DateTime.now().minute + 10,
+                                      ),
+                                    )
+                                  : state.endTime,
+                              controller: endTimeController,
                               widget: const Icon(Icons.access_alarm),
+                              onTap: () async {
+                                TimeOfDay? newTime = await showTimePicker(
+                                  context: context,
+                                  initialTime: TimeOfDay.now(),
+                                );
+                                if (newTime == null) return;
+                                if (context.mounted) {
+                                  String time = DateFormat('h:mm').format(
+                                      DateTime.now().copyWith(
+                                          minute: newTime.minute,
+                                          hour: newTime.hour));
+
+                                  endTimeController.text = time;
+
+                                  context
+                                      .read<AddTaskBloc>()
+                                      .add(AddTaskChangeEndTimeEvent(time));
+                                }
+                              },
                             ),
                           ),
                         ],
@@ -123,53 +217,60 @@ class AddTaskScreen extends StatelessWidget {
                       DefaultTextField(
                         title: 'Remind',
                         note: '${state.remind} minutes early',
-                        controller: remindController,
-                        widget: DropdownButton(
-                          underline: Container(),
-                          dropdownColor: Colors.blueGrey,
-                          borderRadius: BorderRadius.circular(10.0),
-                          onChanged: (value) => context
-                              .read<AddTaskBloc>()
-                              .add(AddTaskSelectRemindEvent(value ?? 0)),
-                          items: reminds
-                              .map(
-                                (e) => DropdownMenuItem(
-                                  value: e,
-                                  child: Text(
-                                    '$e',
-                                    style: const TextStyle(
-                                      color: Colors.white,
+                        controller: remindController..text = '${state.remind}',
+                        widget: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: DropdownButton(
+                            underline: Container(),
+                            dropdownColor: Colors.blueGrey,
+                            borderRadius: BorderRadius.circular(10.0),
+                            onChanged: (value) => context
+                                .read<AddTaskBloc>()
+                                .add(AddTaskSelectRemindEvent(value ?? 0)),
+                            items: reminds
+                                .map(
+                                  (e) => DropdownMenuItem(
+                                    value: e,
+                                    child: Text(
+                                      '$e',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              )
-                              .toList(),
+                                )
+                                .toList(),
+                          ),
                         ),
                       ),
                       DefaultTextField(
                         title: 'Repeat',
                         note: state.repeat,
                         controller: repeatController,
-                        widget: DropdownButton(
-                          dropdownColor: Colors.blueGrey,
-                          underline: Container(),
-                          borderRadius: BorderRadius.circular(10.0),
-                          onChanged: (value) => context
-                              .read<AddTaskBloc>()
-                              .add(AddTaskSelectRepeatEvent(value ?? '')),
-                          items: repeats
-                              .map(
-                                (e) => DropdownMenuItem(
-                                  value: e,
-                                  child: Text(
-                                    e,
-                                    style: const TextStyle(
-                                      color: Colors.white,
+                        widget: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: DropdownButton(
+                            underline: Container(),
+                            dropdownColor: Colors.blueGrey,
+                            borderRadius: BorderRadius.circular(10.0),
+                            onChanged: (value) => context
+                                .read<AddTaskBloc>()
+                                .add(
+                                    AddTaskSelectRepeatEvent(value.toString())),
+                            items: repeats
+                                .map(
+                                  (e) => DropdownMenuItem(
+                                    value: e,
+                                    child: Text(
+                                      e,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              )
-                              .toList(),
+                                )
+                                .toList(),
+                          ),
                         ),
                       ),
                       Padding(
@@ -226,7 +327,31 @@ class AddTaskScreen extends StatelessWidget {
                               ],
                             ),
                             const Spacer(),
-                            DefaultButton(lable: 'Create Task', onTap: () {})
+                            DefaultButton(
+                                lable: 'Create Task',
+                                onTap: () {
+                                  int color = 0;
+                                  for (int i = 0; i < taskColors.length; i++) {
+                                    if (taskColors[i] == state.taskColor) {
+                                      color = i;
+                                    }
+                                  }
+                                  Task task = Task(
+                                    1,
+                                    controllers[0].text,
+                                    controllers[1].text,
+                                    false,
+                                    dateController.text,
+                                    startTimeController.text,
+                                    endTimeController.text,
+                                    color,
+                                    remindController.text,
+                                    repeatController.text,
+                                  );
+                                  context
+                                      .read<AddTaskBloc>()
+                                      .add(AddTaskInsertEvent(task));
+                                })
                           ],
                         ),
                       )

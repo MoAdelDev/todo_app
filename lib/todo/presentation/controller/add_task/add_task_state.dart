@@ -4,18 +4,47 @@ class AddTaskState extends Equatable {
   final int remind;
   final String repeat;
   final Color taskColor;
+  final String dateTime;
+  final String startTime;
+  final String endTime;
+
+  final RequestState taskState;
+  final String message;
+  final String error;
 
   const AddTaskState({
     this.remind = 5,
     this.repeat = 'None',
     this.taskColor = AppColor.bluishColor,
+    this.dateTime = '',
+    this.startTime = '',
+    this.endTime = '',
+    this.taskState = RequestState.nothing,
+    this.message = '',
+    this.error = '',
   });
 
-  AddTaskState copyWith({int? remind, String? repeat, Color? taskColor}) =>
+  AddTaskState copyWith({
+    int? remind,
+    String? repeat,
+    Color? taskColor,
+    String? dateTime,
+    String? startTime,
+    String? endTime,
+    RequestState? taskState,
+    String? message,
+    String? error,
+  }) =>
       AddTaskState(
         remind: remind ?? this.remind,
         repeat: repeat ?? this.repeat,
         taskColor: taskColor ?? this.taskColor,
+        dateTime: dateTime ?? this.dateTime,
+        startTime: startTime ?? this.startTime,
+        endTime: endTime ?? this.endTime,
+        taskState: taskState ?? this.taskState,
+        message: message ?? this.message,
+        error: error ?? this.error,
       );
 
   @override
@@ -23,5 +52,11 @@ class AddTaskState extends Equatable {
         remind,
         repeat,
         taskColor,
+        dateTime,
+        startTime,
+        endTime,
+        taskState,
+        message,
+        error,
       ];
 }
