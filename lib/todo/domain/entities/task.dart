@@ -4,7 +4,7 @@ class Task extends Equatable {
   final int id;
   final String title;
   final String note;
-  final bool isCompleted;
+  final int isCompleted;
   final String dueDate;
   final String startTime;
   final String endTime;

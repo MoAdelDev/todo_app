@@ -3,11 +3,11 @@ import 'package:todo/core/error/failure.dart';
 import 'package:todo/todo/domain/entities/task.dart';
 import 'package:todo/todo/domain/repository/todo_base_repository.dart';
 
-class InsertTaskUseCase {
+class GetTasksUseCase {
   final TodoBaseRepository todoBaseRepository;
 
-  InsertTaskUseCase(this.todoBaseRepository);
+  GetTasksUseCase(this.todoBaseRepository);
 
-  Future<Either<Failure, String>> call({required Task task}) async =>
-      await todoBaseRepository.insertTask(task: task);
+  Future<Either<Failure, List<Task>>> call() async =>
+      await todoBaseRepository.getTasks();
 }

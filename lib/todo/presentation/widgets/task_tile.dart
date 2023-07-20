@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo/core/style/colors.dart';
 import 'package:todo/core/style/themes.dart';
 import 'package:todo/todo/domain/entities/task.dart';
 
@@ -8,6 +9,13 @@ class TaskTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Color color = AppColor.bluishColor;
+    if (task.color == 0)
+      color = AppColor.bluishColor;
+    else if (task.color == 1)
+      color = Colors.red;
+    else
+      color = AppColor.orangeColor;
     return InkWell(
       onTap: () {},
       child: Padding(
@@ -15,7 +23,7 @@ class TaskTile extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(12.0),
           decoration: BoxDecoration(
-            color: Colors.orange,
+            color: color,
             borderRadius: BorderRadius.circular(16),
           ),
           child: Row(
@@ -68,7 +76,7 @@ class TaskTile extends StatelessWidget {
               RotatedBox(
                 quarterTurns: 3,
                 child: Text(
-                  task.isCompleted ? 'Completed' : 'TODO',
+                  task.isCompleted == 1 ? 'Completed' : 'TODO',
                   style: Themes.titleStyle.copyWith(
                     color: Colors.white,
                   ),

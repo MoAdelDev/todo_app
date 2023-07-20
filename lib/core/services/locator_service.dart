@@ -2,6 +2,7 @@ import 'package:get_it/get_it.dart';
 import 'package:todo/todo/data/datasource/todo_datasource.dart';
 import 'package:todo/todo/data/repository/todo_repository.dart';
 import 'package:todo/todo/domain/repository/todo_base_repository.dart';
+import 'package:todo/todo/domain/usecase/get_tasks_usecase.dart';
 import 'package:todo/todo/domain/usecase/insert_task_usecase.dart';
 import 'package:todo/todo/presentation/controller/add_task/add_task_bloc.dart';
 import 'package:todo/todo/presentation/controller/home/home_bloc.dart';
@@ -12,7 +13,7 @@ class LocatorService {
   void init() {
     // BloC
     ls.registerFactory<AddTaskBloc>(() => AddTaskBloc(ls()));
-    ls.registerFactory<HomeBloc>(() => HomeBloc());
+    ls.registerFactory<HomeBloc>(() => HomeBloc(ls()));
 
     // Data source
     ls.registerLazySingleton<TodoBaseDataSource>(() => TodoDataSource());
@@ -22,5 +23,6 @@ class LocatorService {
 
     // use case
     ls.registerLazySingleton<InsertTaskUseCase>(() => InsertTaskUseCase(ls()));
+    ls.registerLazySingleton<GetTasksUseCase>(() => GetTasksUseCase(ls()));
   }
 }

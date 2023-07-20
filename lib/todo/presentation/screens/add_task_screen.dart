@@ -360,7 +360,7 @@ class AddTaskScreen extends StatelessWidget {
                                           1,
                                           controllers[0].text,
                                           controllers[1].text,
-                                          false,
+                                          0,
                                           dateController.text,
                                           startTimeController.text,
                                           endTimeController.text,

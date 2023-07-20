@@ -11,9 +11,19 @@ class TodoRepository extends TodoBaseRepository {
   TodoRepository(this.todoBaseDataSource);
 
   @override
-  Future<Either<Failure, String>> insretTask({required Task task}) async {
+  Future<Either<Failure, String>> insertTask({required Task task}) async {
     try {
       final result = await todoBaseDataSource.insertTask(task: task);
+      return Right(result);
+    } on ServerException catch (e) {
+      return Left(LocalFailure(e.errorMessageModel.errorMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Task>>> getTasks() async {
+    try {
+      final result = await todoBaseDataSource.getTasks();
       return Right(result);
     } on ServerException catch (e) {
       return Left(LocalFailure(e.errorMessageModel.errorMessage));
