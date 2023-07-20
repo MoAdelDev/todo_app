@@ -13,7 +13,7 @@ class TaskModel extends Task {
       super.remind,
       super.repeat);
 
-  factory TaskModel.fromJson(Map<String, dynamic> json) => TaskModel(
+  factory TaskModel.fromMap(Map<String, dynamic> json) => TaskModel(
       json['id'],
       json['title'],
       json['note'],

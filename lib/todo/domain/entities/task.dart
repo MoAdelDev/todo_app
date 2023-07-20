@@ -25,6 +25,18 @@ class Task extends Equatable {
     this.repeat,
   );
 
+  Map<String, dynamic> toMap() => {
+        'title': title,
+        'note': note,
+        'isCompleted': isCompleted,
+        'date': dueDate,
+        'startTime': startTime,
+        'endTime': endTime,
+        'color': color,
+        'remind': remind,
+        'repeat': repeat,
+      };
+
   @override
   List<Object?> get props => [
         id,

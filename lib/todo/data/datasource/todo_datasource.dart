@@ -10,17 +10,13 @@ abstract class TodoBaseDataSource {
 class TodoDataSource extends TodoBaseDataSource {
   @override
   Future<String> insertTask({required Task task}) async {
-    await DatabaseHelper.database?.transaction((txn) async {
-      await txn
-          .rawInsert(
-        'INSERT INTO Todo(title, note, isCompleted, date, startTime, endTime, color, remind, repeat) VALUES(${task.title},${task.note},${task.isCompleted},${task.dueDate},${task.startTime},${task.endTime},${task.color},${task.remind},${task.repeat})',
-      )
-          .then((value) {
-        return 'Task added successfully';
-      }).catchError((error) {
-        throw ServerException(ErrorMessageModel.fromJson(error.toString()));
-      });
-    });
-    return '';
+    final result = await DatabaseHelper.database?.insert('Todo', task.toMap());
+
+    if (result != null) {
+      print('Id :: $result');
+      return 'Task added successfully';
+    }
+    throw ServerException(
+        const ErrorMessageModel('Error to add task, try again'));
   }
 }

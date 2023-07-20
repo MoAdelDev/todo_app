@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:intl/intl.dart';
 import 'package:todo/core/services/cache_helper.dart';
 import 'package:todo/main.dart';
 import 'package:todo/todo/domain/entities/task.dart';

@@ -6,7 +6,7 @@ import '../style/themes.dart';
 class DefaultTextField extends StatelessWidget {
   final String title;
   final String note;
-
+  final String? errorMsg;
   final TextEditingController controller;
   final Widget? widget;
   final Function()? onTap;
@@ -16,6 +16,7 @@ class DefaultTextField extends StatelessWidget {
     required this.note,
     required this.controller,
     this.widget,
+    this.errorMsg,
     this.onTap,
   });
 
@@ -39,6 +40,12 @@ class DefaultTextField extends StatelessWidget {
             keyboardType: TextInputType.multiline,
             maxLines: null,
             autofocus: false,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return errorMsg ?? '';
+              }
+              return null;
+            },
             readOnly: widget != null ? true : false,
             cursorColor: Get.isDarkMode ? Colors.grey[100] : Colors.grey[700],
             style: Themes.subTitleStyle,

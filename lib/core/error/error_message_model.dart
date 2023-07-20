@@ -5,8 +5,6 @@ class ErrorMessageModel extends Equatable {
 
   const ErrorMessageModel(this.errorMessage);
 
-  factory ErrorMessageModel.fromJson(String error) => ErrorMessageModel(error);
-
   @override
   List<Object?> get props => [errorMessage];
 }

@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:todo/core/style/colors.dart';
+import 'package:todo/core/utils/toasts.dart';
 import 'package:todo/todo/domain/entities/task.dart';
 import 'package:todo/todo/domain/usecase/insert_task_usecase.dart';
 
@@ -71,18 +72,24 @@ class AddTaskBloc extends Bloc<AddTaskBaseEvent, AddTaskState> {
     );
     final result = await insertTaskUseCase(task: event.task);
     result.fold(
-      (error) => emit(
-        state.copyWith(
-          error: error.message,
-          taskState: RequestState.error,
-        ),
-      ),
-      (message) => emit(
-        state.copyWith(
-          message: message,
-          taskState: RequestState.success,
-        ),
-      ),
+      (error) {
+        showToast(msg: error.message, requestState: RequestState.error);
+        emit(
+          state.copyWith(
+            error: error.message,
+            taskState: RequestState.error,
+          ),
+        );
+      },
+      (message) {
+        showToast(msg: message, requestState: RequestState.success);
+        emit(
+          state.copyWith(
+            message: message,
+            taskState: RequestState.success,
+          ),
+        );
+      },
     );
   }
 }

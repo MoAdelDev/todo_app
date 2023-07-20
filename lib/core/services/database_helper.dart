@@ -5,10 +5,10 @@ class DatabaseHelper {
   static init() async {
     database = await openDatabase(
       'todo.db',
-      version: 1,
+      version: 2,
       onCreate: (db, version) async {
         await db.execute(
-            'CREATE TABLE Todo (id INTEGER PRIMARY KEY, title TEXT, note Text, date Text, startTime Text, endTime Text, isCompleted bool, color int, repeat Text, remind Text)');
+            'CREATE TABLE Todo (id INTEGER PRIMARY KEY,title TEXT,note TEXT,date TEXT,startTime TEXT,endTime TEXT,isCompleted INTEGER,color INTEGER,repeat TEXT,remind TEXT)');
         print('Database Created');
       },
       onOpen: (db) {
