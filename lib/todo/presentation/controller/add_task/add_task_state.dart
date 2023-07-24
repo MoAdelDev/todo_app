@@ -8,10 +8,6 @@ class AddTaskState extends Equatable {
   final String startTime;
   final String endTime;
 
-  final RequestState taskState;
-  final String message;
-  final String error;
-
   const AddTaskState({
     this.remind = 5,
     this.repeat = 'None',
@@ -19,9 +15,6 @@ class AddTaskState extends Equatable {
     this.dateTime = '',
     this.startTime = '',
     this.endTime = '',
-    this.taskState = RequestState.nothing,
-    this.message = '',
-    this.error = '',
   });
 
   AddTaskState copyWith({
@@ -31,9 +24,6 @@ class AddTaskState extends Equatable {
     String? dateTime,
     String? startTime,
     String? endTime,
-    RequestState? taskState,
-    String? message,
-    String? error,
   }) =>
       AddTaskState(
         remind: remind ?? this.remind,
@@ -42,9 +32,6 @@ class AddTaskState extends Equatable {
         dateTime: dateTime ?? this.dateTime,
         startTime: startTime ?? this.startTime,
         endTime: endTime ?? this.endTime,
-        taskState: taskState ?? this.taskState,
-        message: message ?? this.message,
-        error: error ?? this.error,
       );
 
   @override
@@ -55,8 +42,5 @@ class AddTaskState extends Equatable {
         dateTime,
         startTime,
         endTime,
-        taskState,
-        message,
-        error,
       ];
 }

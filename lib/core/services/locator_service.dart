@@ -12,8 +12,11 @@ class LocatorService {
 
   void init() {
     // BloC
-    ls.registerFactory<AddTaskBloc>(() => AddTaskBloc(ls()));
-    ls.registerFactory<HomeBloc>(() => HomeBloc(ls()));
+    ls.registerFactory<AddTaskBloc>(() => AddTaskBloc());
+    ls.registerFactory<HomeBloc>(() => HomeBloc(
+          ls(),
+          ls(),
+        ));
 
     // Data source
     ls.registerLazySingleton<TodoBaseDataSource>(() => TodoDataSource());

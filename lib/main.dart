@@ -6,6 +6,7 @@ import 'package:todo/core/services/locator_service.dart';
 import 'package:todo/core/services/cache_helper.dart';
 import 'package:todo/core/style/themes.dart';
 import 'package:todo/todo/domain/entities/task.dart';
+import 'package:todo/todo/presentation/controller/add_task/add_task_bloc.dart';
 import 'package:todo/todo/presentation/controller/home/home_bloc.dart';
 import 'package:todo/todo/presentation/screens/home_screen.dart';
 
@@ -22,14 +23,17 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   static bool isDark = CacheHelper.getData(key: 'isDark') ?? false;
-  static List<Task> tasks = [];
   const MyApp({super.key});
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) =>
-          LocatorService.ls<HomeBloc>()..add(HomeGetTasksEvent()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) =>
+              LocatorService.ls<HomeBloc>()..add(HomeGetTasksEvent()),
+        ),
+      ],
       child: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
           return GetMaterialApp(

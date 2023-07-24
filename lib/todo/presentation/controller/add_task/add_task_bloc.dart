@@ -4,9 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:todo/core/style/colors.dart';
-import 'package:todo/core/utils/toasts.dart';
 import 'package:todo/todo/domain/entities/task.dart';
-import 'package:todo/todo/domain/usecase/insert_task_usecase.dart';
 
 import '../../../../core/utils/enums.dart';
 
@@ -14,10 +12,7 @@ part 'add_task_event.dart';
 part 'add_task_state.dart';
 
 class AddTaskBloc extends Bloc<AddTaskBaseEvent, AddTaskState> {
-  final InsertTaskUseCase insertTaskUseCase;
-  AddTaskBloc(
-    this.insertTaskUseCase,
-  ) : super(const AddTaskState()) {
+  AddTaskBloc() : super(const AddTaskState()) {
     on<AddTaskSelectRemindEvent>(_selectRemind);
 
     on<AddTaskSelectRepeatEvent>(_selectRepeat);
@@ -29,8 +24,6 @@ class AddTaskBloc extends Bloc<AddTaskBaseEvent, AddTaskState> {
     on<AddTaskChangeStartTimeEvent>(_changeStartTime);
 
     on<AddTaskChangeEndTimeEvent>(_changeEndTime);
-
-    on<AddTaskInsertEvent>(_insertTask);
   }
 
   FutureOr<void> _selectRemind(
@@ -61,35 +54,5 @@ class AddTaskBloc extends Bloc<AddTaskBaseEvent, AddTaskState> {
   FutureOr<void> _changeEndTime(
       AddTaskChangeEndTimeEvent event, Emitter<AddTaskState> emit) {
     emit(state.copyWith(endTime: event.time));
-  }
-
-  FutureOr<void> _insertTask(
-      AddTaskInsertEvent event, Emitter<AddTaskState> emit) async {
-    emit(
-      state.copyWith(
-        taskState: RequestState.loading,
-      ),
-    );
-    final result = await insertTaskUseCase(task: event.task);
-    result.fold(
-      (error) {
-        showToast(msg: error.message, requestState: RequestState.error);
-        emit(
-          state.copyWith(
-            error: error.message,
-            taskState: RequestState.error,
-          ),
-        );
-      },
-      (message) {
-        showToast(msg: message, requestState: RequestState.success);
-        emit(
-          state.copyWith(
-            message: message,
-            taskState: RequestState.success,
-          ),
-        );
-      },
-    );
   }
 }

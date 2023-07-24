@@ -13,6 +13,7 @@ import 'package:todo/core/utils/enums.dart';
 import 'package:todo/main.dart';
 import 'package:todo/todo/domain/entities/task.dart';
 import 'package:todo/todo/presentation/controller/add_task/add_task_bloc.dart';
+import 'package:todo/todo/presentation/controller/home/home_bloc.dart';
 
 class AddTaskScreen extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
@@ -340,44 +341,49 @@ class AddTaskScreen extends StatelessWidget {
                                 ],
                               ),
                               const Spacer(),
-                              ConditionalBuilder(
-                                condition:
-                                    state.taskState != RequestState.loading,
-                                builder: (context) => DefaultButton(
-                                    lable: 'Create Task',
-                                    onTap: () {
-                                      if (_formKey.currentState!.validate()) {
-                                        int color = 0;
-                                        for (int i = 0;
-                                            i < taskColors.length;
-                                            i++) {
-                                          if (taskColors[i] ==
-                                              state.taskColor) {
-                                            color = i;
+                              BlocBuilder<HomeBloc, HomeState>(
+                                builder: (context, homeState) {
+                                  return ConditionalBuilder(
+                                    condition: homeState.addTaskState !=
+                                        RequestState.loading,
+                                    builder: (context) => DefaultButton(
+                                        lable: 'Create Task',
+                                        onTap: () {
+                                          if (_formKey.currentState!
+                                              .validate()) {
+                                            int color = 0;
+                                            for (int i = 0;
+                                                i < taskColors.length;
+                                                i++) {
+                                              if (taskColors[i] ==
+                                                  state.taskColor) {
+                                                color = i;
+                                              }
+                                            }
+                                            Task task = Task(
+                                              1,
+                                              controllers[0].text,
+                                              controllers[1].text,
+                                              0,
+                                              dateController.text,
+                                              startTimeController.text,
+                                              endTimeController.text,
+                                              color,
+                                              remindController.text,
+                                              repeatController.text,
+                                            );
+                                            context
+                                                .read<HomeBloc>()
+                                                .add(HomeInsertTaskEvent(task));
                                           }
-                                        }
-                                        Task task = Task(
-                                          1,
-                                          controllers[0].text,
-                                          controllers[1].text,
-                                          0,
-                                          dateController.text,
-                                          startTimeController.text,
-                                          endTimeController.text,
-                                          color,
-                                          remindController.text,
-                                          repeatController.text,
-                                        );
-                                        context
-                                            .read<AddTaskBloc>()
-                                            .add(AddTaskInsertEvent(task));
-                                      }
-                                    }),
-                                fallback: (context) => const Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 10.0),
-                                  child: DefaultSpinKit(),
-                                ),
+                                        }),
+                                    fallback: (context) => const Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 10.0),
+                                      child: DefaultSpinKit(),
+                                    ),
+                                  );
+                                },
                               ),
                             ],
                           ),
