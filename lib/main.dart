@@ -18,6 +18,8 @@ void main() async {
   await CacheHelper.init();
   //await NotificationsService().init();
   await DatabaseHelper.init();
+
+  
   runApp(const MyApp());
 }
 
