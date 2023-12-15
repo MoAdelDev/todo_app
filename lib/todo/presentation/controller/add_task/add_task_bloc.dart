@@ -5,9 +5,6 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:todo/core/style/colors.dart';
 import 'package:todo/todo/domain/entities/task.dart';
-
-import '../../../../core/utils/enums.dart';
-
 part 'add_task_event.dart';
 part 'add_task_state.dart';
 

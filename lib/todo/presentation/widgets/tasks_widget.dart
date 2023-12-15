@@ -9,8 +9,6 @@ import 'package:todo/todo/domain/entities/task.dart';
 import 'package:todo/todo/presentation/controller/home/home_bloc.dart';
 import 'package:todo/todo/presentation/widgets/task_tile.dart';
 
-import '../../../main.dart';
-
 class TasksWidget extends StatelessWidget {
   final NotificationsService notificationsService;
   const TasksWidget({

@@ -5,8 +5,6 @@ import 'package:todo/core/services/database_helper.dart';
 import 'package:todo/core/services/locator_service.dart';
 import 'package:todo/core/services/cache_helper.dart';
 import 'package:todo/core/style/themes.dart';
-import 'package:todo/todo/domain/entities/task.dart';
-import 'package:todo/todo/presentation/controller/add_task/add_task_bloc.dart';
 import 'package:todo/todo/presentation/controller/home/home_bloc.dart';
 import 'package:todo/todo/presentation/screens/home_screen.dart';
 
@@ -19,7 +17,6 @@ void main() async {
   //await NotificationsService().init();
   await DatabaseHelper.init();
 
-  
   runApp(const MyApp());
 }
 
