@@ -24,3 +24,9 @@ class HomeInsertTaskEvent extends HomeBaseEvent {
 
   const HomeInsertTaskEvent(this.task);
 }
+
+class HomeDeleteTaskEvent extends HomeBaseEvent {
+  final int taskId;
+
+  const HomeDeleteTaskEvent(this.taskId);
+}

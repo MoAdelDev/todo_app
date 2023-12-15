@@ -12,6 +12,10 @@ class HomeState extends Equatable {
   final String addTaskMessage;
   final String addTaskError;
 
+  final RequestState deleteTaskState;
+  final String deleteTaskMessage;
+  final String deleteTaskError;
+
   const HomeState({
     this.isDark = false,
     this.dateTime,
@@ -22,6 +26,9 @@ class HomeState extends Equatable {
     this.addTaskState = RequestState.nothing,
     this.addTaskMessage = '',
     this.addTaskError = '',
+    this.deleteTaskState = RequestState.nothing,
+    this.deleteTaskMessage = '',
+    this.deleteTaskError = '',
   });
 
   HomeState copyWith({
@@ -34,6 +41,9 @@ class HomeState extends Equatable {
     RequestState? addTaskState,
     String? addTaskMessage,
     String? addTaskError,
+    RequestState? deleteTaskState,
+    String? deleteTaskMessage,
+    String? deleteTaskError,
   }) =>
       HomeState(
         isDark: isDark ?? this.isDark,
@@ -45,7 +55,11 @@ class HomeState extends Equatable {
         addTaskState: addTaskState ?? this.addTaskState,
         addTaskMessage: addTaskMessage ?? this.addTaskMessage,
         addTaskError: addTaskError ?? this.addTaskError,
+        deleteTaskState: deleteTaskState ?? this.deleteTaskState,
+        deleteTaskMessage: deleteTaskMessage ?? this.deleteTaskMessage,
+        deleteTaskError: deleteTaskError ?? this.deleteTaskError,
       );
+
   @override
   List<Object> get props => [
         isDark,
@@ -57,5 +71,8 @@ class HomeState extends Equatable {
         addTaskState,
         addTaskMessage,
         addTaskError,
+        deleteTaskState,
+        deleteTaskMessage,
+        deleteTaskError,
       ];
 }

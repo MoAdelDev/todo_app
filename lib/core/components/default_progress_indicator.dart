@@ -4,7 +4,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 class DefaultSpinKit extends StatelessWidget {
   final double size;
 
-  const DefaultSpinKit({Key? key, this.size = 30.0}) : super(key: key);
+  const DefaultSpinKit({super.key, this.size = 30.0});
 
   @override
   Widget build(BuildContext context) {

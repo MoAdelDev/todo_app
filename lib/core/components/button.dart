@@ -17,7 +17,7 @@ class DefaultButton extends StatelessWidget {
       width: 120,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10.0),
-        color: AppColor.primaryColor,
+        color: LightColor.primaryColor,
       ),
       child: MaterialButton(
         onPressed: onTap,

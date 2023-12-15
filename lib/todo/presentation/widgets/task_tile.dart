@@ -1,25 +1,83 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gap/gap.dart';
 import 'package:todo/core/style/colors.dart';
 import 'package:todo/core/style/themes.dart';
 import 'package:todo/todo/domain/entities/task.dart';
+import 'package:todo/todo/presentation/controller/home/home_bloc.dart';
 
 class TaskTile extends StatelessWidget {
   final Task task;
+
   const TaskTile({super.key, required this.task});
 
   @override
   Widget build(BuildContext context) {
-    Color color = AppColor.bluishColor;
+    Color color = LightColor.primaryColor;
     if (task.color == 0)
-      color = AppColor.bluishColor;
+      color = LightColor.primaryColor;
     else if (task.color == 1)
       color = Colors.red;
     else
-      color = AppColor.orangeColor;
-    return InkWell(
-      onTap: () {},
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+      color = LightColor.secondaryColor;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: InkWell(
+        onTap: () {},
+        onLongPress: () {
+          showModalBottomSheet(
+            clipBehavior: Clip.antiAlias,
+            // or hardEdge must
+            context: context,
+            backgroundColor: Theme.of(context).colorScheme.background,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(30),
+                topRight: Radius.circular(30),
+              ),
+            ),
+            builder: (context) {
+              return Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(
+                      width: double.infinity,
+                      child: TextButton(
+                        onPressed: () {},
+                        child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Text(
+                            'Edit Task',
+                            style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Theme.of(context).colorScheme.onBackground),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const Gap(10),
+                    SizedBox(
+                      width: double.infinity,
+                      child: TextButton(
+                        onPressed: () async{
+                          BlocProvider.of<HomeBloc>(context).add(HomeDeleteTaskEvent(task.id));
+                          Navigator.pop(context);
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Text(
+                            'Delete Task',
+                            style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Theme.of(context).colorScheme.onBackground),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          );
+        },
         child: Container(
           padding: const EdgeInsets.all(12.0),
           decoration: BoxDecoration(
@@ -44,6 +102,14 @@ class TaskTile extends StatelessWidget {
                             Icons.access_time_rounded,
                             color: Colors.grey[200],
                             size: 18.0,
+                          ),
+                          const SizedBox(
+                            width: 10.0,
+                          ),
+                          Text(
+                            task.dueDate,
+                            style: Themes.bodyStyle
+                                .copyWith(color: Colors.grey[200]),
                           ),
                           const SizedBox(
                             width: 10.0,

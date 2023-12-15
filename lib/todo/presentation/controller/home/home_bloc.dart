@@ -2,10 +2,12 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:todo/core/services/cache_helper.dart';
 import 'package:todo/core/utils/enums.dart';
 import 'package:todo/main.dart';
 import 'package:todo/todo/domain/entities/task.dart';
+import 'package:todo/todo/domain/usecase/delete_task_usecase.dart';
 import 'package:todo/todo/domain/usecase/get_tasks_usecase.dart';
 import 'package:todo/todo/domain/usecase/insert_task_usecase.dart';
 
@@ -17,14 +19,18 @@ part 'home_state.dart';
 class HomeBloc extends Bloc<HomeBaseEvent, HomeState> {
   final GetTasksUseCase getTasksUseCase;
   final InsertTaskUseCase insertTaskUseCase;
+  final DeleteTaskUseCase deleteTaskUseCase;
+
   HomeBloc(
     this.getTasksUseCase,
     this.insertTaskUseCase,
+      this.deleteTaskUseCase
   ) : super(const HomeState()) {
     on<HomeChnageThemeModeEvent>(_changeThemeMode);
     on<HomeChangeDateTimeEvent>(_changeDateTime);
     on<HomeGetTasksEvent>(_getTasks);
     on<HomeInsertTaskEvent>(_insertTask);
+    on<HomeDeleteTaskEvent>(_deleteTask);
   }
 
   FutureOr<void> _changeThemeMode(
@@ -79,5 +85,28 @@ class HomeBloc extends Bloc<HomeBaseEvent, HomeState> {
         );
       },
     );
+  }
+
+  FutureOr<void> _deleteTask(HomeDeleteTaskEvent event, Emitter<HomeState> emit) async{
+    final result = await deleteTaskUseCase(taskId: event.taskId);
+    result.fold((error) {
+      showToast(msg: error.message, requestState: RequestState.error);
+      emit(
+        state.copyWith(
+          deleteTaskError: error.message,
+          deleteTaskState: RequestState.error,
+        ),
+      );
+
+    }, (message) {
+      add(HomeGetTasksEvent());
+      showToast(msg: message, requestState: RequestState.success);
+      emit(
+        state.copyWith(
+          deleteTaskMessage: message,
+          deleteTaskState: RequestState.success,
+        ),
+      );
+    });
   }
 }

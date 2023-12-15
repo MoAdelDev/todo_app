@@ -29,8 +29,8 @@ class NoTasksWidget extends StatelessWidget {
                   'assets/images/task.svg',
                   // ignore: deprecated_member_use
                   color: MyApp.isDark
-                      ? AppColor.primaryColor.withAlpha(60)
-                      : AppColor.primaryColor.withOpacity(0.5),
+                      ? LightColor.primaryColor.withAlpha(60)
+                      : LightColor.primaryColor.withOpacity(0.5),
                   width: 120.0,
                   height: 120.0,
                 ),

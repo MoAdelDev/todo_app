@@ -11,7 +11,7 @@ class AddTaskState extends Equatable {
   const AddTaskState({
     this.remind = 5,
     this.repeat = 'None',
-    this.taskColor = AppColor.bluishColor,
+    this.taskColor = LightColor.primaryColor,
     this.dateTime = '',
     this.startTime = '',
     this.endTime = '',

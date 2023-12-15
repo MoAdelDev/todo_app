@@ -10,7 +10,6 @@ import 'package:todo/core/style/colors.dart';
 import 'package:todo/core/style/themes.dart';
 import 'package:intl/intl.dart';
 import 'package:todo/core/utils/enums.dart';
-import 'package:todo/main.dart';
 import 'package:todo/todo/domain/entities/task.dart';
 import 'package:todo/todo/presentation/controller/add_task/add_task_bloc.dart';
 import 'package:todo/todo/presentation/controller/home/home_bloc.dart';
@@ -53,9 +52,9 @@ class AddTaskScreen extends StatelessWidget {
   final List<String> repeats = ['None', 'Daily', 'Weekly', 'Monthly'];
 
   final List<Color> taskColors = [
-    AppColor.bluishColor,
+    LightColor.primaryColor,
     Colors.red,
-    AppColor.orangeColor,
+    LightColor.secondaryColor,
   ];
 
   AddTaskScreen({super.key});
@@ -70,7 +69,7 @@ class AddTaskScreen extends StatelessWidget {
           },
           icon: Icon(
             Icons.arrow_back,
-            color: MyApp.isDark ? Colors.white : AppColor.darkGreyColor,
+            color: Theme.of(context).colorScheme.onBackground,
           ),
         ),
         actions: const [
@@ -325,7 +324,7 @@ class AddTaskScreen extends StatelessWidget {
                                                       child: Icon(
                                                         Icons.check,
                                                         color:
-                                                            AppColor.whiteColor,
+                                                            LightColor.onBackgroundColor,
                                                       ),
                                                     )
                                                   : Container(),
@@ -348,7 +347,7 @@ class AddTaskScreen extends StatelessWidget {
                                         RequestState.loading,
                                     builder: (context) => DefaultButton(
                                         lable: 'Create Task',
-                                        onTap: () {
+                                        onTap: () async{
                                           if (_formKey.currentState!
                                               .validate()) {
                                             int color = 0;
@@ -375,6 +374,7 @@ class AddTaskScreen extends StatelessWidget {
                                             context
                                                 .read<HomeBloc>()
                                                 .add(HomeInsertTaskEvent(task));
+                                            Navigator.pop(context);
                                           }
                                         }),
                                     fallback: (context) => const Padding(

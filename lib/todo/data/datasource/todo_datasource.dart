@@ -8,6 +8,8 @@ abstract class TodoBaseDataSource {
   Future<String> insertTask({required Task task});
 
   Future<List<Task>> getTasks();
+
+  Future<String> deleteTask({required int taskId});
 }
 
 class TodoDataSource extends TodoBaseDataSource {
@@ -16,7 +18,6 @@ class TodoDataSource extends TodoBaseDataSource {
     final result = await DatabaseHelper.database?.insert('Todo', task.toMap());
 
     if (result != null) {
-      print('Id :: $result');
       return 'Task added successfully';
     }
     throw ServerException(
@@ -33,5 +34,16 @@ class TodoDataSource extends TodoBaseDataSource {
     }
     throw ServerException(
         const ErrorMessageModel('Failed to get tasks, try again'));
+  }
+
+  @override
+  Future<String> deleteTask({required int taskId}) async{
+    final result = await DatabaseHelper.database?.delete('Todo', where: 'id = ?', whereArgs: [taskId]);
+
+    if (result != null) {
+      return 'Task deleted successfully';
+    }
+    throw ServerException(
+        const ErrorMessageModel('Error to delete task, try again'));
   }
 }

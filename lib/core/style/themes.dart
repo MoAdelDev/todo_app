@@ -6,12 +6,12 @@ import 'package:todo/main.dart';
 class Themes {
   static final light = ThemeData(
     appBarTheme: AppBarTheme(
-      color: AppColor.whiteColor,
-      iconTheme: IconThemeData(
-        color: MyApp.isDark ? Colors.white : AppColor.darkGreyColor,
+      color: LightColor.backgroundColor,
+      iconTheme: const IconThemeData(
+        color: LightColor.onBackgroundColor,
       ),
-      actionsIconTheme: IconThemeData(
-        color: MyApp.isDark ? Colors.white : AppColor.darkGreyColor,
+      actionsIconTheme: const IconThemeData(
+        color: LightColor.onBackgroundColor,
       ),
       elevation: 0.0,
       titleTextStyle: titleStyle,
@@ -19,24 +19,24 @@ class Themes {
     brightness: Brightness.light,
     colorScheme: const ColorScheme(
       brightness: Brightness.light,
-      primary: AppColor.primaryColor,
-      onPrimary: AppColor.whiteColor,
-      secondary: AppColor.orangeColor,
-      onSecondary: AppColor.whiteColor,
-      error: Colors.red,
-      onError: AppColor.whiteColor,
-      background: AppColor.whiteColor,
-      onBackground: AppColor.whiteColor,
-      surface: AppColor.whiteColor,
-      onSurface: AppColor.primaryColor,
+      primary: LightColor.primaryColor,
+      onPrimary: LightColor.onBackgroundColor,
+      secondary: LightColor.secondaryColor,
+      onSecondary: LightColor.onBackgroundColor,
+      error: LightColor.errorColor,
+      onError: LightColor.onBackgroundColor,
+      background: LightColor.backgroundColor,
+      onBackground: LightColor.onBackgroundColor,
+      surface: LightColor.backgroundColor,
+      onSurface: LightColor.onBackgroundColor,
     ),
   );
 
   static final dark = ThemeData(
     appBarTheme: AppBarTheme(
-      color: AppColor.darkGreyColor,
-      iconTheme: IconThemeData(
-        color: MyApp.isDark ? Colors.white : AppColor.darkGreyColor,
+      color: DarkColor.backgroundColor,
+      iconTheme: const IconThemeData(
+        color: DarkColor.onBackgroundColor
       ),
       elevation: 0.0,
       titleTextStyle: titleStyle,
@@ -44,16 +44,16 @@ class Themes {
     brightness: Brightness.dark,
     colorScheme: const ColorScheme(
       brightness: Brightness.dark,
-      primary: AppColor.primaryColor,
-      onPrimary: AppColor.whiteColor,
-      secondary: AppColor.orangeColor,
-      onSecondary: AppColor.whiteColor,
-      error: Colors.red,
-      onError: AppColor.whiteColor,
-      background: AppColor.darkGreyColor,
-      onBackground: AppColor.whiteColor,
-      surface: AppColor.whiteColor,
-      onSurface: AppColor.primaryColor,
+      primary: DarkColor.primaryColor,
+      onPrimary: DarkColor.onPrimaryColor,
+      secondary: DarkColor.secondaryColor,
+      onSecondary: DarkColor.onPrimaryColor,
+      error: DarkColor.errorColor,
+      onError: DarkColor.onPrimaryColor,
+      background: DarkColor.backgroundColor,
+      onBackground: DarkColor.onBackgroundColor,
+      surface: DarkColor.backgroundColor,
+      onSurface: DarkColor.onBackgroundColor,
     ),
   );
 
