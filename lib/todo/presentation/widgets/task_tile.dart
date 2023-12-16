@@ -23,12 +23,14 @@ class TaskTile extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: InkWell(
         onTap: () {
-          Get.to(AddTaskScreen(task: task,));
+          Get.to(AddTaskScreen(
+            task: task,
+          ));
         },
         child: Container(
           padding: const EdgeInsets.all(12.0),
           decoration: BoxDecoration(
-            color: color,
+            color: task.isCompleted==0 ? color : Colors.grey,
             borderRadius: BorderRadius.circular(16),
           ),
           child: Row(

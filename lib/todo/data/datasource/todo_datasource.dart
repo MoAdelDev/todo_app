@@ -12,6 +12,10 @@ abstract class TodoBaseDataSource {
   Future<List<Task>> getTasks();
 
   Future<String> deleteTask({required int taskId});
+
+  Future<void> satisfyTask({required int taskId, required int isCompleted});
+
+  Future<List<Task>> searchTasks({required String dateTime});
 }
 
 class TodoDataSource extends TodoBaseDataSource {
@@ -52,12 +56,35 @@ class TodoDataSource extends TodoBaseDataSource {
 
   @override
   Future<String> updateTask({required Task task, required int taskId}) async {
-    print(task.id);
     final result = await DatabaseHelper.database
         ?.update('Todo', task.toMap(), where: 'id = ?', whereArgs: [taskId]);
-    print(result);
     if (result != null) {
       return 'Task updated successfully';
+    }
+    throw ServerException(
+        const ErrorMessageModel('Error to update task, try again'));
+  }
+
+  @override
+  Future<void> satisfyTask(
+      {required int taskId, required int isCompleted}) async {
+    final result = await DatabaseHelper.database?.update(
+        'Todo', {'isCompleted': isCompleted},
+        where: 'id = ?', whereArgs: [taskId]);
+    if (result != null) {
+      return;
+    }
+    throw ServerException(
+        const ErrorMessageModel('Error to update task, try again'));
+  }
+
+  @override
+  Future<List<Task>> searchTasks({required String dateTime}) async
+  {
+    final result = await DatabaseHelper.database?.query('Todo', where: 'date = ?', whereArgs: [dateTime]);
+
+    if (result != null) {
+      return List.from((result).map((e) => TaskModel.fromMap(e)));
     }
     throw ServerException(
         const ErrorMessageModel('Error to update task, try again'));

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:todo/core/style/colors.dart';
 import 'package:todo/core/style/themes.dart';
 import 'package:todo/todo/presentation/controller/home/home_bloc.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 
-class AddDateBarWidget extends StatelessWidget {
-  const AddDateBarWidget({super.key});
+class DateBarWidget extends StatelessWidget {
+  const DateBarWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +24,7 @@ class AddDateBarWidget extends StatelessWidget {
           height: 100,
           width: 70,
           onDateChange: (selectedDate) {
-            context.read<HomeBloc>().add(HomeChangeDateTimeEvent(selectedDate));
+            context.read<HomeBloc>().add(HomeSearchTasksEvent(selectedDate));
           },
         );
       },

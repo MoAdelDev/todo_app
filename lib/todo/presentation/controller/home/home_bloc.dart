@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:todo/core/services/cache_helper.dart';
 import 'package:todo/core/utils/enums.dart';
 import 'package:todo/main.dart';
@@ -10,6 +11,8 @@ import 'package:todo/todo/domain/entities/task.dart';
 import 'package:todo/todo/domain/usecase/delete_task_usecase.dart';
 import 'package:todo/todo/domain/usecase/get_tasks_usecase.dart';
 import 'package:todo/todo/domain/usecase/insert_task_usecase.dart';
+import 'package:todo/todo/domain/usecase/satisfy_task_usecase.dart';
+import 'package:todo/todo/domain/usecase/search_tasks_usecase.dart';
 import 'package:todo/todo/domain/usecase/update_task_usecase.dart';
 
 import '../../../../core/utils/toasts.dart';
@@ -23,20 +26,24 @@ class HomeBloc extends Bloc<HomeBaseEvent, HomeState> {
   final InsertTaskUseCase insertTaskUseCase;
   final DeleteTaskUseCase deleteTaskUseCase;
   final UpdateTaskUseCase updateTaskUseCase;
+  final SatisfyTaskUseCase satisfyTaskUseCase;
+  final SearchTasksUseCase searchTasksUseCase;
 
   HomeBloc(
     this.getTasksUseCase,
     this.insertTaskUseCase,
     this.deleteTaskUseCase,
     this.updateTaskUseCase,
+    this.satisfyTaskUseCase,
+    this.searchTasksUseCase,
   ) : super(const HomeState()) {
     on<HomeChangeThemeModeEvent>(_changeThemeMode);
-    on<HomeChangeDateTimeEvent>(_changeDateTime);
     on<HomeGetTasksEvent>(_getTasks);
     on<HomeInsertTaskEvent>(_insertTask);
     on<HomeDeleteTaskEvent>(_deleteTask);
     on<HomeUpdateTaskEvent>(_updateTask);
-
+    on<HomeSatisfyTaskEvent>(_satisfyTask);
+    on<HomeSearchTasksEvent>(_searchTasks);
   }
 
   FutureOr<void> _changeThemeMode(
@@ -45,12 +52,6 @@ class HomeBloc extends Bloc<HomeBaseEvent, HomeState> {
     CacheHelper.saveData(key: 'isDark', value: MyApp.isDark);
     emit(state.copyWith(isDark: !state.isDark));
   }
-
-  FutureOr<void> _changeDateTime(
-      HomeChangeDateTimeEvent event, Emitter<HomeState> emit) {
-    emit(state.copyWith(dateTime: event.dateTime));
-  }
-
   FutureOr<void> _getTasks(
       HomeGetTasksEvent event, Emitter<HomeState> emit) async {
     final result = await getTasksUseCase();
@@ -58,7 +59,18 @@ class HomeBloc extends Bloc<HomeBaseEvent, HomeState> {
       emit(state.copyWith(
           tasksError: error.message, tasksState: RequestState.error));
     }, (tasks) {
-      emit(state.copyWith(tasks: tasks, tasksState: RequestState.success));
+      List<Task> finalTasks = tasks;
+      finalTasks.sort(
+        (a, b) {
+          if (a.isCompleted == 0 && b.isCompleted == 1) {
+            return 0;
+          } else if (a.isCompleted == 1 && b.isCompleted == 0) {
+            return 1;
+          }
+          return -1;
+        },
+      );
+      emit(state.copyWith(tasks: finalTasks, tasksState: RequestState.success));
     });
   }
 
@@ -116,8 +128,10 @@ class HomeBloc extends Bloc<HomeBaseEvent, HomeState> {
     });
   }
 
-  FutureOr<void> _updateTask(HomeUpdateTaskEvent event, Emitter<HomeState> emit) async{
-    final result= await updateTaskUseCase(task: event.task, taskId: event.taskId);
+  FutureOr<void> _updateTask(
+      HomeUpdateTaskEvent event, Emitter<HomeState> emit) async {
+    final result =
+        await updateTaskUseCase(task: event.task, taskId: event.taskId);
     result.fold((error) {
       showToast(msg: error.message, requestState: RequestState.error);
       emit(
@@ -135,6 +149,45 @@ class HomeBloc extends Bloc<HomeBaseEvent, HomeState> {
           updateTaskState: RequestState.success,
         ),
       );
+    });
+  }
+
+  FutureOr<void> _satisfyTask(
+      HomeSatisfyTaskEvent event, Emitter<HomeState> emit) async {
+    final result = await satisfyTaskUseCase(
+        taskId: event.taskId, isCompleted: event.isCompleted);
+    result.fold((error) {
+      showToast(msg: error.message, requestState: RequestState.error);
+      emit(
+        state.copyWith(
+          satisfyTaskError: error.message,
+          satisfyTaskState: RequestState.error,
+        ),
+      );
+    }, (message) {
+      add(HomeGetTasksEvent());
+    });
+  }
+
+  FutureOr<void> _searchTasks(HomeSearchTasksEvent event, Emitter<HomeState> emit) async{
+    final String dateTime=DateFormat('dd/MM/yyyy').format(event.dateTime);
+    final result = await searchTasksUseCase(dateTime: dateTime);
+    result.fold((error) {
+      emit(state.copyWith(
+          tasksError: error.message, tasksState: RequestState.error));
+    }, (tasks) {
+      List<Task> finalTasks = tasks;
+      finalTasks.sort(
+            (a, b) {
+          if (a.isCompleted == 0 && b.isCompleted == 1) {
+            return 0;
+          } else if (a.isCompleted == 1 && b.isCompleted == 0) {
+            return 1;
+          }
+          return -1;
+        },
+      );
+      emit(state.copyWith(tasks: finalTasks, tasksState: RequestState.success));
     });
   }
 }

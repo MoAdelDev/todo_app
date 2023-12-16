@@ -2,10 +2,9 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:quickalert/quickalert.dart';
 import 'package:todo/core/components/default_progress_indicator.dart';
-import 'package:todo/core/style/colors.dart';
 import 'package:todo/core/style/themes.dart';
+import 'package:todo/core/utils/dialogs.dart';
 import 'package:todo/core/utils/enums.dart';
 import 'package:todo/todo/domain/entities/task.dart';
 import 'package:todo/todo/presentation/controller/home/home_bloc.dart';
@@ -32,7 +31,7 @@ class TasksWidget extends StatelessWidget {
                 child: FadeInAnimation(
                   child: Dismissible(
                     key: Key('${task.id}'),
-                    direction: DismissDirection.startToEnd,
+                    direction: DismissDirection.horizontal,
                     background: Container(
                       color: Theme.of(context).colorScheme.error,
                       child: Align(
@@ -43,46 +42,49 @@ class TasksWidget extends StatelessWidget {
                                 color: Theme.of(context).colorScheme.onPrimary),
                           )),
                     ),
+                    secondaryBackground: Container(
+                      color: Theme.of(context).colorScheme.secondary,
+                      child: Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            'Complete this task',
+                            style: Themes.titleStyle.copyWith(
+                                color: Theme.of(context).colorScheme.onPrimary),
+                          )),
+                    ),
                     confirmDismiss: (direction) async {
                       if (direction == DismissDirection.startToEnd) {
                         // Delete this task
-                        Color color = LightColor.primaryColor;
-                        if (task.color == 0)
-                          color = LightColor.primaryColor;
-                        else if (task.color == 1)
-                          color = Colors.red;
-                        else
-                          color = LightColor.secondaryColor;
-
-                        QuickAlert.show(
+                        AppDialog.showConformDialog(
                             context: context,
-                            type: QuickAlertType.confirm,
                             title: 'Delete the task',
-                            borderRadius: 30.0,
-                            backgroundColor:
-                                Theme.of(context).colorScheme.background,
-                            barrierDismissible: true,
-                            animType: QuickAlertAnimType.rotate,
-                            cancelBtnText: 'Cancel',
-                            onConfirmBtnTap: () {
+                            body: 'Are you want to delete this task',
+                            confirmBtnText: 'Delete',
+                            onConfirmTab: () {
                               BlocProvider.of<HomeBloc>(context)
                                   .add(HomeDeleteTaskEvent(task.id));
                               Navigator.pop(context);
-                            },
-                            text: 'Are you want to delete this task',
-                            textColor:
-                                Theme.of(context).colorScheme.onBackground,
-                            confirmBtnText: 'Delete',
-                            confirmBtnTextStyle: Themes.subTitleStyle.copyWith(
-                                color: Theme.of(context).colorScheme.onPrimary),
-                            cancelBtnTextStyle: Themes.subTitleStyle.copyWith(
-                                color: Theme.of(context).colorScheme.onError),
-                            confirmBtnColor:
-                                Theme.of(context).colorScheme.primary,
-                            onCancelBtnTap: () {
+                            });
+                      } else if (direction == DismissDirection.endToStart) {
+                        // Complete this task
+                        AppDialog.showConformDialog(
+                            context: context,
+                            title: task.isCompleted == 0
+                                ? 'Complete the task'
+                                : 'Abandon the task',
+                            body: task.isCompleted == 0
+                                ? 'Are you want to complete this task'
+                                : 'Are you want to abandon this task',
+                            confirmBtnText:
+                                task.isCompleted == 0 ? 'Complete' : 'Abandon',
+                            onConfirmTab: () {
+                              // Confirm to complete task
+                              BlocProvider.of<HomeBloc>(context).add(
+                                HomeSatisfyTaskEvent(
+                                    task.id, task.isCompleted == 0 ? 1 : 0),
+                              );
                               Navigator.pop(context);
                             });
-                        return false;
                       }
                       return false;
                     },

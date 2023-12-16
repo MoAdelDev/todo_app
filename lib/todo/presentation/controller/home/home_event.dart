@@ -9,11 +9,6 @@ abstract class HomeBaseEvent extends Equatable {
 
 class HomeChangeThemeModeEvent extends HomeBaseEvent {}
 
-class HomeChangeDateTimeEvent extends HomeBaseEvent {
-  final DateTime dateTime;
-
-  const HomeChangeDateTimeEvent(this.dateTime);
-}
 
 class HomeShowBottomSheetEvent extends HomeBaseEvent {}
 
@@ -36,4 +31,17 @@ class HomeUpdateTaskEvent extends HomeBaseEvent {
   final int taskId;
 
   const HomeUpdateTaskEvent(this.task, this.taskId);
+}
+
+class HomeSatisfyTaskEvent extends HomeBaseEvent {
+  final int taskId;
+  final int isCompleted;
+
+  const HomeSatisfyTaskEvent(this.taskId, this.isCompleted);
+}
+
+class HomeSearchTasksEvent extends HomeBaseEvent {
+  final DateTime dateTime;
+
+  const HomeSearchTasksEvent(this.dateTime);
 }

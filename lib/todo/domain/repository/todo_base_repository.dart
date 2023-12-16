@@ -17,4 +17,13 @@ abstract class TodoBaseRepository {
   Future<Either<Failure, String>> deleteTask({
     required int taskId,
   });
+
+  Future<Either<Failure, void>> satisfyTask({
+    required int taskId,
+    required int isCompleted,
+  });
+
+  Future<Either<Failure, List<Task>>> searchTasks({
+    required String dateTime,
+  });
 }

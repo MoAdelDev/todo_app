@@ -5,6 +5,8 @@ import 'package:todo/todo/domain/repository/todo_base_repository.dart';
 import 'package:todo/todo/domain/usecase/delete_task_usecase.dart';
 import 'package:todo/todo/domain/usecase/get_tasks_usecase.dart';
 import 'package:todo/todo/domain/usecase/insert_task_usecase.dart';
+import 'package:todo/todo/domain/usecase/satisfy_task_usecase.dart';
+import 'package:todo/todo/domain/usecase/search_tasks_usecase.dart';
 import 'package:todo/todo/domain/usecase/update_task_usecase.dart';
 import 'package:todo/todo/presentation/controller/add_task/add_task_bloc.dart';
 import 'package:todo/todo/presentation/controller/home/home_bloc.dart';
@@ -16,6 +18,8 @@ class LocatorService {
     // BloC
     ls.registerFactory<AddTaskBloc>(() => AddTaskBloc());
     ls.registerFactory<HomeBloc>(() => HomeBloc(
+          ls(),
+          ls(),
           ls(),
           ls(),
           ls(),
@@ -33,5 +37,9 @@ class LocatorService {
     ls.registerLazySingleton<GetTasksUseCase>(() => GetTasksUseCase(ls()));
     ls.registerLazySingleton<DeleteTaskUseCase>(() => DeleteTaskUseCase(ls()));
     ls.registerLazySingleton<UpdateTaskUseCase>(() => UpdateTaskUseCase(ls()));
+    ls.registerLazySingleton<SatisfyTaskUseCase>(
+        () => SatisfyTaskUseCase(ls()));
+    ls.registerLazySingleton<SearchTasksUseCase>(
+        () => SearchTasksUseCase(ls()));
   }
 }

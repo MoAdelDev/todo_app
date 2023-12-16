@@ -2,7 +2,6 @@ part of 'home_bloc.dart';
 
 class HomeState extends Equatable {
   final bool isDark;
-  final DateTime? dateTime;
   final List<Task> tasks;
   final RequestState tasksState;
   final String tasksError;
@@ -16,13 +15,16 @@ class HomeState extends Equatable {
   final String updateTaskMessage;
   final String updateTaskError;
 
+  final RequestState satisfyTaskState;
+  final String satisfyTaskMessage;
+  final String satisfyTaskError;
+
   final RequestState deleteTaskState;
   final String deleteTaskMessage;
   final String deleteTaskError;
 
   const HomeState({
     this.isDark = false,
-    this.dateTime,
     this.tasks = const [],
     this.tasksState = RequestState.loading,
     this.tasksError = '',
@@ -33,6 +35,9 @@ class HomeState extends Equatable {
     this.updateTaskState = RequestState.nothing,
     this.updateTaskMessage = '',
     this.updateTaskError = '',
+    this.satisfyTaskState = RequestState.nothing,
+    this.satisfyTaskMessage = '',
+    this.satisfyTaskError = '',
     this.deleteTaskState = RequestState.nothing,
     this.deleteTaskMessage = '',
     this.deleteTaskError = '',
@@ -40,7 +45,6 @@ class HomeState extends Equatable {
 
   HomeState copyWith({
     bool? isDark,
-    DateTime? dateTime,
     List<Task>? tasks,
     RequestState? tasksState,
     String? tasksError,
@@ -51,13 +55,15 @@ class HomeState extends Equatable {
     RequestState? updateTaskState,
     String? updateTaskMessage,
     String? updateTaskError,
+    RequestState? satisfyTaskState,
+    String? satisfyTaskMessage,
+    String? satisfyTaskError,
     RequestState? deleteTaskState,
     String? deleteTaskMessage,
     String? deleteTaskError,
   }) =>
       HomeState(
         isDark: isDark ?? this.isDark,
-        dateTime: dateTime ?? this.dateTime,
         tasks: tasks ?? this.tasks,
         tasksState: tasksState ?? this.tasksState,
         tasksError: tasksError ?? this.tasksError,
@@ -68,6 +74,9 @@ class HomeState extends Equatable {
         updateTaskState: updateTaskState ?? this.updateTaskState,
         updateTaskMessage: updateTaskMessage ?? this.updateTaskMessage,
         updateTaskError: updateTaskError ?? this.updateTaskError,
+        satisfyTaskState: updateTaskState ?? this.updateTaskState,
+        satisfyTaskMessage: updateTaskMessage ?? this.updateTaskMessage,
+        satisfyTaskError: updateTaskError ?? this.updateTaskError,
         deleteTaskState: deleteTaskState ?? this.deleteTaskState,
         deleteTaskMessage: deleteTaskMessage ?? this.deleteTaskMessage,
         deleteTaskError: deleteTaskError ?? this.deleteTaskError,
@@ -76,7 +85,6 @@ class HomeState extends Equatable {
   @override
   List<Object> get props => [
         isDark,
-        dateTime ?? DateTime.now(),
         tasks,
         tasksState,
         tasksError,
@@ -90,5 +98,8 @@ class HomeState extends Equatable {
         updateTaskState,
         updateTaskMessage,
         updateTaskError,
+        satisfyTaskState,
+        satisfyTaskMessage,
+        satisfyTaskError,
       ];
 }

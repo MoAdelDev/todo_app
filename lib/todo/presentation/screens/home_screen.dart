@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:todo/core/style/colors.dart';
 import 'package:todo/main.dart';
 import 'package:todo/todo/presentation/controller/home/home_bloc.dart';
-import 'package:todo/todo/presentation/widgets/add_date_bar_widget.dart';
+import 'package:todo/todo/presentation/widgets/date_bar_widget.dart';
 import 'package:todo/todo/presentation/widgets/add_task_bar_widget.dart';
 import 'package:todo/todo/presentation/widgets/tasks_widget.dart';
 
@@ -62,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(
                     height: 8.0,
                   ),
-                  AddDateBarWidget(),
+                  DateBarWidget(),
                   SizedBox(
                     height: 8.0,
                   ),
