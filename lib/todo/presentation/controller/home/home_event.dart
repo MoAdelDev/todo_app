@@ -7,7 +7,7 @@ abstract class HomeBaseEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class HomeChnageThemeModeEvent extends HomeBaseEvent {}
+class HomeChangeThemeModeEvent extends HomeBaseEvent {}
 
 class HomeChangeDateTimeEvent extends HomeBaseEvent {
   final DateTime dateTime;
@@ -29,4 +29,11 @@ class HomeDeleteTaskEvent extends HomeBaseEvent {
   final int taskId;
 
   const HomeDeleteTaskEvent(this.taskId);
+}
+
+class HomeUpdateTaskEvent extends HomeBaseEvent {
+  final Task task;
+  final int taskId;
+
+  const HomeUpdateTaskEvent(this.task, this.taskId);
 }

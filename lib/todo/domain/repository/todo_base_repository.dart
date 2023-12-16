@@ -7,6 +7,11 @@ abstract class TodoBaseRepository {
     required Task task,
   });
 
+  Future<Either<Failure, String>> updateTask({
+    required Task task,
+    required int taskId,
+  });
+
   Future<Either<Failure, List<Task>>> getTasks();
 
   Future<Either<Failure, String>> deleteTask({

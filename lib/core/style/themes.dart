@@ -20,7 +20,7 @@ class Themes {
     colorScheme: const ColorScheme(
       brightness: Brightness.light,
       primary: LightColor.primaryColor,
-      onPrimary: LightColor.onBackgroundColor,
+      onPrimary: LightColor.onPrimaryColor,
       secondary: LightColor.secondaryColor,
       onSecondary: LightColor.onBackgroundColor,
       error: LightColor.errorColor,

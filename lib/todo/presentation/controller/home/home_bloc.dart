@@ -10,31 +10,37 @@ import 'package:todo/todo/domain/entities/task.dart';
 import 'package:todo/todo/domain/usecase/delete_task_usecase.dart';
 import 'package:todo/todo/domain/usecase/get_tasks_usecase.dart';
 import 'package:todo/todo/domain/usecase/insert_task_usecase.dart';
+import 'package:todo/todo/domain/usecase/update_task_usecase.dart';
 
 import '../../../../core/utils/toasts.dart';
 
 part 'home_event.dart';
+
 part 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeBaseEvent, HomeState> {
   final GetTasksUseCase getTasksUseCase;
   final InsertTaskUseCase insertTaskUseCase;
   final DeleteTaskUseCase deleteTaskUseCase;
+  final UpdateTaskUseCase updateTaskUseCase;
 
   HomeBloc(
     this.getTasksUseCase,
     this.insertTaskUseCase,
-      this.deleteTaskUseCase
+    this.deleteTaskUseCase,
+    this.updateTaskUseCase,
   ) : super(const HomeState()) {
-    on<HomeChnageThemeModeEvent>(_changeThemeMode);
+    on<HomeChangeThemeModeEvent>(_changeThemeMode);
     on<HomeChangeDateTimeEvent>(_changeDateTime);
     on<HomeGetTasksEvent>(_getTasks);
     on<HomeInsertTaskEvent>(_insertTask);
     on<HomeDeleteTaskEvent>(_deleteTask);
+    on<HomeUpdateTaskEvent>(_updateTask);
+
   }
 
   FutureOr<void> _changeThemeMode(
-      HomeChnageThemeModeEvent event, Emitter<HomeState> emit) {
+      HomeChangeThemeModeEvent event, Emitter<HomeState> emit) {
     MyApp.isDark = !MyApp.isDark;
     CacheHelper.saveData(key: 'isDark', value: MyApp.isDark);
     emit(state.copyWith(isDark: !state.isDark));
@@ -87,7 +93,8 @@ class HomeBloc extends Bloc<HomeBaseEvent, HomeState> {
     );
   }
 
-  FutureOr<void> _deleteTask(HomeDeleteTaskEvent event, Emitter<HomeState> emit) async{
+  FutureOr<void> _deleteTask(
+      HomeDeleteTaskEvent event, Emitter<HomeState> emit) async {
     final result = await deleteTaskUseCase(taskId: event.taskId);
     result.fold((error) {
       showToast(msg: error.message, requestState: RequestState.error);
@@ -97,7 +104,6 @@ class HomeBloc extends Bloc<HomeBaseEvent, HomeState> {
           deleteTaskState: RequestState.error,
         ),
       );
-
     }, (message) {
       add(HomeGetTasksEvent());
       showToast(msg: message, requestState: RequestState.success);
@@ -105,6 +111,28 @@ class HomeBloc extends Bloc<HomeBaseEvent, HomeState> {
         state.copyWith(
           deleteTaskMessage: message,
           deleteTaskState: RequestState.success,
+        ),
+      );
+    });
+  }
+
+  FutureOr<void> _updateTask(HomeUpdateTaskEvent event, Emitter<HomeState> emit) async{
+    final result= await updateTaskUseCase(task: event.task, taskId: event.taskId);
+    result.fold((error) {
+      showToast(msg: error.message, requestState: RequestState.error);
+      emit(
+        state.copyWith(
+          updateTaskError: error.message,
+          updateTaskState: RequestState.error,
+        ),
+      );
+    }, (message) {
+      add(HomeGetTasksEvent());
+      showToast(msg: message, requestState: RequestState.success);
+      emit(
+        state.copyWith(
+          updateTaskMessage: message,
+          updateTaskState: RequestState.success,
         ),
       );
     });

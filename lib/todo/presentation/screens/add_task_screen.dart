@@ -14,12 +14,23 @@ import 'package:todo/todo/domain/entities/task.dart';
 import 'package:todo/todo/presentation/controller/add_task/add_task_bloc.dart';
 import 'package:todo/todo/presentation/controller/home/home_bloc.dart';
 
-class AddTaskScreen extends StatelessWidget {
+class AddTaskScreen extends StatefulWidget {
+  final Task? task;
+
+  const AddTaskScreen({super.key, this.task});
+
+  @override
+  State<AddTaskScreen> createState() => _AddTaskScreenState();
+}
+
+class _AddTaskScreenState extends State<AddTaskScreen> {
   final _formKey = GlobalKey<FormState>();
+
   final List<String> titles = const [
     'Title',
     'Note',
   ];
+
   final List<String> hints = [
     'Enter title here',
     'Enter note here',
@@ -29,7 +40,8 @@ class AddTaskScreen extends StatelessWidget {
     TextEditingController(),
     TextEditingController(),
   ];
-  final List<String> errorMsgs = [
+
+  final List<String> msgErrors = [
     'Enter the title of your task',
     'Enter the note of your task',
   ];
@@ -39,16 +51,19 @@ class AddTaskScreen extends StatelessWidget {
 
   final TextEditingController startTimeController =
       TextEditingController(text: DateFormat('h:mm').format(DateTime.now()));
+
   final TextEditingController endTimeController = TextEditingController(
       text: DateFormat('h:mm')
           .format(DateTime.now().copyWith(minute: DateTime.now().minute + 10)));
 
   final TextEditingController remindController =
       TextEditingController(text: '5');
+
   final TextEditingController repeatController =
       TextEditingController(text: 'None');
 
   final List<int> reminds = [5, 10, 15, 50, 25];
+
   final List<String> repeats = ['None', 'Daily', 'Weekly', 'Monthly'];
 
   final List<Color> taskColors = [
@@ -57,7 +72,14 @@ class AddTaskScreen extends StatelessWidget {
     LightColor.secondaryColor,
   ];
 
-  AddTaskScreen({super.key});
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if (widget.task != null) {
+      _fillTextFields(widget.task!);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +133,7 @@ class AddTaskScreen extends StatelessWidget {
                             titles.length,
                             (index) => DefaultTextField(
                               title: titles[index],
-                              errorMsg: errorMsgs[index],
+                              errorMsg: msgErrors[index],
                               note: hints[index],
                               controller: controllers[index],
                               widget: index == 2
@@ -323,8 +345,8 @@ class AddTaskScreen extends StatelessWidget {
                                                               .center,
                                                       child: Icon(
                                                         Icons.check,
-                                                        color:
-                                                            LightColor.onBackgroundColor,
+                                                        color: LightColor
+                                                            .onBackgroundColor,
                                                       ),
                                                     )
                                                   : Container(),
@@ -346,19 +368,24 @@ class AddTaskScreen extends StatelessWidget {
                                     condition: homeState.addTaskState !=
                                         RequestState.loading,
                                     builder: (context) => DefaultButton(
-                                        lable: 'Create Task',
-                                        onTap: () async{
+                                        lable: widget.task == null
+                                            ? 'Create Task'
+                                            : 'Edit Task',
+                                        onTap: () async {
                                           if (_formKey.currentState!
                                               .validate()) {
                                             int color = 0;
                                             for (int i = 0;
-                                                i < taskColors.length;
-                                                i++) {
+                                            i < taskColors.length;
+                                            i++) {
                                               if (taskColors[i] ==
                                                   state.taskColor) {
                                                 color = i;
                                               }
                                             }
+
+                                            FocusManager.instance.primaryFocus
+                                                ?.unfocus();
                                             Task task = Task(
                                               1,
                                               controllers[0].text,
@@ -371,9 +398,15 @@ class AddTaskScreen extends StatelessWidget {
                                               remindController.text,
                                               repeatController.text,
                                             );
-                                            context
-                                                .read<HomeBloc>()
-                                                .add(HomeInsertTaskEvent(task));
+
+                                            if (widget.task != null) {
+                                              context.read<HomeBloc>().add(
+                                                  HomeUpdateTaskEvent(
+                                                      task, widget.task!.id));
+                                            } else {
+                                              context.read<HomeBloc>().add(
+                                                  HomeInsertTaskEvent(task));
+                                            }
                                             Navigator.pop(context);
                                           }
                                         }),
@@ -398,5 +431,15 @@ class AddTaskScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  _fillTextFields(Task task) {
+    controllers[0].text = task.title;
+    controllers[1].text = task.note;
+    dateController.text = task.dueDate;
+    endTimeController.text = task.endTime;
+    remindController.text = task.remind;
+    startTimeController.text = task.startTime;
+    repeatController.text = task.repeat;
   }
 }

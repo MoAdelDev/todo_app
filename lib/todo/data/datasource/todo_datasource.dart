@@ -7,6 +7,8 @@ import 'package:todo/todo/domain/entities/task.dart';
 abstract class TodoBaseDataSource {
   Future<String> insertTask({required Task task});
 
+  Future<String> updateTask({required Task task, required int taskId});
+
   Future<List<Task>> getTasks();
 
   Future<String> deleteTask({required int taskId});
@@ -37,13 +39,27 @@ class TodoDataSource extends TodoBaseDataSource {
   }
 
   @override
-  Future<String> deleteTask({required int taskId}) async{
-    final result = await DatabaseHelper.database?.delete('Todo', where: 'id = ?', whereArgs: [taskId]);
+  Future<String> deleteTask({required int taskId}) async {
+    final result = await DatabaseHelper.database
+        ?.delete('Todo', where: 'id = ?', whereArgs: [taskId]);
 
     if (result != null) {
       return 'Task deleted successfully';
     }
     throw ServerException(
         const ErrorMessageModel('Error to delete task, try again'));
+  }
+
+  @override
+  Future<String> updateTask({required Task task, required int taskId}) async {
+    print(task.id);
+    final result = await DatabaseHelper.database
+        ?.update('Todo', task.toMap(), where: 'id = ?', whereArgs: [taskId]);
+    print(result);
+    if (result != null) {
+      return 'Task updated successfully';
+    }
+    throw ServerException(
+        const ErrorMessageModel('Error to update task, try again'));
   }
 }

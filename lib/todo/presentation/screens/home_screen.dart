@@ -30,14 +30,13 @@ class _HomeScreenState extends State<HomeScreen> {
           appBar: AppBar(
             leading: IconButton(
               onPressed: () async {
-                context.read<HomeBloc>().add(HomeChnageThemeModeEvent());
+                context.read<HomeBloc>().add(HomeChangeThemeModeEvent());
               },
               icon: Icon(
-                MyApp.isDark
-                    ? Icons.wb_sunny_outlined
-                    : Icons.nightlight_round_outlined,
-                color: Theme.of(context).colorScheme.onBackground
-              ),
+                  MyApp.isDark
+                      ? Icons.wb_sunny_outlined
+                      : Icons.nightlight_round_outlined,
+                  color: Theme.of(context).colorScheme.onBackground),
             ),
             actions: const [
               CircleAvatar(
@@ -68,8 +67,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     height: 8.0,
                   ),
                   Expanded(
-                      child: TasksWidget(
-                  )),
+                    child: TasksWidget(),
+                  ),
                 ],
               ),
             ),

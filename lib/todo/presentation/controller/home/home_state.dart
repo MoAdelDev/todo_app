@@ -12,6 +12,10 @@ class HomeState extends Equatable {
   final String addTaskMessage;
   final String addTaskError;
 
+  final RequestState updateTaskState;
+  final String updateTaskMessage;
+  final String updateTaskError;
+
   final RequestState deleteTaskState;
   final String deleteTaskMessage;
   final String deleteTaskError;
@@ -26,6 +30,9 @@ class HomeState extends Equatable {
     this.addTaskState = RequestState.nothing,
     this.addTaskMessage = '',
     this.addTaskError = '',
+    this.updateTaskState = RequestState.nothing,
+    this.updateTaskMessage = '',
+    this.updateTaskError = '',
     this.deleteTaskState = RequestState.nothing,
     this.deleteTaskMessage = '',
     this.deleteTaskError = '',
@@ -41,6 +48,9 @@ class HomeState extends Equatable {
     RequestState? addTaskState,
     String? addTaskMessage,
     String? addTaskError,
+    RequestState? updateTaskState,
+    String? updateTaskMessage,
+    String? updateTaskError,
     RequestState? deleteTaskState,
     String? deleteTaskMessage,
     String? deleteTaskError,
@@ -55,6 +65,9 @@ class HomeState extends Equatable {
         addTaskState: addTaskState ?? this.addTaskState,
         addTaskMessage: addTaskMessage ?? this.addTaskMessage,
         addTaskError: addTaskError ?? this.addTaskError,
+        updateTaskState: updateTaskState ?? this.updateTaskState,
+        updateTaskMessage: updateTaskMessage ?? this.updateTaskMessage,
+        updateTaskError: updateTaskError ?? this.updateTaskError,
         deleteTaskState: deleteTaskState ?? this.deleteTaskState,
         deleteTaskMessage: deleteTaskMessage ?? this.deleteTaskMessage,
         deleteTaskError: deleteTaskError ?? this.deleteTaskError,
@@ -74,5 +87,8 @@ class HomeState extends Equatable {
         deleteTaskState,
         deleteTaskMessage,
         deleteTaskError,
+        updateTaskState,
+        updateTaskMessage,
+        updateTaskError,
       ];
 }

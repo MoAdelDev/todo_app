@@ -31,9 +31,19 @@ class TodoRepository extends TodoBaseRepository {
   }
 
   @override
-  Future<Either<Failure, String>> deleteTask({required int taskId}) async{
+  Future<Either<Failure, String>> deleteTask({required int taskId}) async {
     try {
       final result = await todoBaseDataSource.deleteTask(taskId: taskId);
+      return Right(result);
+    } on ServerException catch (e) {
+      return Left(LocalFailure(e.errorMessageModel.errorMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> updateTask({required Task task, required int taskId}) async {
+    try {
+      final result = await todoBaseDataSource.updateTask(task: task, taskId: taskId);
       return Right(result);
     } on ServerException catch (e) {
       return Left(LocalFailure(e.errorMessageModel.errorMessage));
