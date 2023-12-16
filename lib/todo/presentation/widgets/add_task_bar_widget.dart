@@ -33,7 +33,7 @@ class AddTaskBarWidget extends StatelessWidget {
             DefaultButton(
                 lable: 'Add Task',
                 onTap: () async {
-                  await Get.to(AddTaskScreen());
+                  await Get.to(const AddTaskScreen());
                 })
           ],
         );

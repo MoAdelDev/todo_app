@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:todo/core/style/colors.dart';
+import 'package:todo/core/style/themes.dart';
 import 'package:todo/main.dart';
 import 'package:todo/todo/presentation/controller/home/home_bloc.dart';
 import 'package:todo/todo/presentation/widgets/date_bar_widget.dart';
@@ -48,25 +50,63 @@ class _HomeScreenState extends State<HomeScreen> {
               )
             ],
           ),
-          body: const SizedBox(
+          body: SizedBox(
             width: double.infinity,
             height: double.infinity,
             child: Padding(
-              padding: EdgeInsets.symmetric(
+              padding: const EdgeInsets.symmetric(
                 horizontal: 15.0,
                 vertical: 10.0,
               ),
               child: Column(
                 children: [
-                  AddTaskBarWidget(),
-                  SizedBox(
+                  const AddTaskBarWidget(),
+                  const SizedBox(
                     height: 8.0,
                   ),
-                  DateBarWidget(),
-                  SizedBox(
+                  Row(
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          context.read<HomeBloc>().add(HomeGetTasksEvent());
+                        },
+                        child: Container(
+                          height: 95,
+                          width: 65,
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.primary,
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(10)),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'All',
+                                style: Themes.titleStyle.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onPrimary),
+                              ),
+                              Text(
+                                'Tasks',
+                                style: Themes.titleStyle.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onPrimary),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const Gap(5),
+                      const Expanded(child: DateBarWidget()),
+                    ],
+                  ),
+                  const SizedBox(
                     height: 8.0,
                   ),
-                  Expanded(
+                  const Expanded(
                     child: TasksWidget(),
                   ),
                 ],
