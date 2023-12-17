@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
-import 'package:todo/core/style/colors.dart';
 import 'package:todo/core/style/themes.dart';
 import 'package:todo/main.dart';
 import 'package:todo/todo/presentation/controller/home/home_bloc.dart';
