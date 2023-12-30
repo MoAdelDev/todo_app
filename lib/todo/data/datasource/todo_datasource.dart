@@ -16,6 +16,8 @@ abstract class TodoBaseDataSource {
   Future<void> satisfyTask({required int taskId, required int isCompleted});
 
   Future<List<Task>> searchTasks({required String dateTime});
+
+  Future<List<Task>> reorderTasks({required int oldIndex, required int newIndex});
 }
 
 class TodoDataSource extends TodoBaseDataSource {
@@ -79,14 +81,43 @@ class TodoDataSource extends TodoBaseDataSource {
   }
 
   @override
-  Future<List<Task>> searchTasks({required String dateTime}) async
-  {
-    final result = await DatabaseHelper.database?.query('Todo', where: 'date = ?', whereArgs: [dateTime]);
+  Future<List<Task>> searchTasks({required String dateTime}) async {
+    final result = await DatabaseHelper.database
+        ?.query('Todo', where: 'date = ?', whereArgs: [dateTime]);
 
     if (result != null) {
       return List.from((result).map((e) => TaskModel.fromMap(e)));
     }
     throw ServerException(
-        const ErrorMessageModel('Error to update task, try again'));
+      const ErrorMessageModel('Error to update task, try again'),
+    );
+  }
+
+  @override
+  Future<List<Task>> reorderTasks({required int oldIndex, required int newIndex}) async{
+    final result =
+    await DatabaseHelper.database?.rawQuery('SELECT * FROM Todo');
+    if (result != null) {
+      final List<Task> tasks = List.from((result).map((e) => TaskModel.fromMap(e)));
+      Task temp = tasks.removeAt(oldIndex);
+      tasks.insert(newIndex, temp);
+      tasks.sort((a, b) {
+        if (a.isCompleted == 0 && b.isCompleted == 1) {
+          return 0;
+        } else if (a.isCompleted == 1 && b.isCompleted == 0) {
+          return 1;
+        }
+        return -1;
+      },);
+      for(Task task in tasks){
+        deleteTask(taskId:task.id);
+      }
+      for(Task task in tasks){
+        insertTask(task: task);
+      }
+      return tasks;
+    }
+    throw ServerException(
+        const ErrorMessageModel('Failed to get tasks, try again'));
   }
 }

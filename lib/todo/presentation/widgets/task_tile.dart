@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:get/get.dart';
-import 'package:todo/core/style/colors.dart';
 import 'package:todo/core/style/themes.dart';
 import 'package:todo/todo/domain/entities/task.dart';
 import 'package:todo/todo/presentation/screens/add_task_screen.dart';
@@ -12,31 +12,21 @@ class TaskTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color color = LightColor.primaryColor;
-    if (task.color == 0)
-      color = LightColor.primaryColor;
-    else if (task.color == 1)
-      color = Colors.red;
-    else
-      color = LightColor.secondaryColor;
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: InkWell(
-        onTap: () {
-          Get.to(AddTaskScreen(
-            task: task,
-          ));
-        },
-        child: Container(
-          padding: const EdgeInsets.all(12.0),
-          decoration: BoxDecoration(
-            color: task.isCompleted==0 ? color : Colors.grey,
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
+    return InkWell(
+      onTap: () {
+        Get.to(AddTaskScreen(
+          task: task,
+        ));
+      },
+      child: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(right: 60.0),
+            child: Row(
+              children: [
+                const Icon(Icons.drag_indicator_sharp, color: Colors.white,),
+                const Gap(8.0),
+                Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -81,25 +71,32 @@ class TaskTile extends StatelessWidget {
                     ],
                   ),
                 ),
-              ),
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                width: 0.5,
-                height: 60,
-                color: Colors.grey[200]!.withOpacity(0.7),
-              ),
-              RotatedBox(
-                quarterTurns: 3,
-                child: Text(
-                  task.isCompleted == 1 ? 'Completed' : 'TODO',
-                  style: Themes.titleStyle.copyWith(
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
+          Positioned.fill(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                    width: 0.5,
+                    color: Colors.grey[200]?.withOpacity(0.7),
+                    height: 100,
+                  ),
+                  RotatedBox(
+                    quarterTurns: 3,
+                    child: Text(
+                      task.isCompleted == 1 ? 'Completed' : 'TODO',
+                      style: Themes.titleStyle.copyWith(
+                        fontSize: 14.0,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ))
+        ],
       ),
     );
   }

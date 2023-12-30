@@ -6,18 +6,15 @@ import 'package:todo/core/services/locator_service.dart';
 import 'package:todo/core/services/cache_helper.dart';
 import 'package:todo/core/style/themes.dart';
 import 'package:todo/todo/presentation/controller/home/home_bloc.dart';
-import 'package:todo/todo/presentation/screens/home_screen.dart';
+import 'package:todo/todo/presentation/screens/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  //Bloc.observer = MyBlocObserver();
-
   LocatorService().init();
   await CacheHelper.init();
-  //await NotificationsService().init();
   await DatabaseHelper.init();
 
-  runApp(const MyApp());
+   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -40,7 +37,7 @@ class MyApp extends StatelessWidget {
             theme: Themes.light,
             themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
             darkTheme: Themes.dark,
-            home: const HomeScreen(),
+            home: const SplashScreen(),
           );
         },
       ),

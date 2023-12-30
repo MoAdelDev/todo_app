@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:todo/core/style/themes.dart';
 import 'package:todo/main.dart';
@@ -17,6 +16,16 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final List<String> sortByItems = [
+    'Sort by',
+    'Title',
+    'Note',
+    'Start Date',
+    'Due Date',
+    'Completed',
+  ];
+  String sortedItem = 'Sort by';
+
   @override
   void initState() {
     super.initState();
@@ -66,16 +75,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   Row(
                     children: [
                       InkWell(
-                        onTap: () {
+                        onTap: (){
                           context.read<HomeBloc>().add(HomeGetTasksEvent());
                         },
                         child: Container(
-                          height: 95,
                           width: 65,
+                          height: 95,
                           decoration: BoxDecoration(
                             color: Theme.of(context).colorScheme.primary,
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(10)),
+                            borderRadius: BorderRadius.circular(10.0),
                           ),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -83,23 +91,22 @@ class _HomeScreenState extends State<HomeScreen> {
                               Text(
                                 'All',
                                 style: Themes.titleStyle.copyWith(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onPrimary),
+                                  color: Theme.of(context).colorScheme.onPrimary,
+                                ),
                               ),
                               Text(
                                 'Tasks',
                                 style: Themes.titleStyle.copyWith(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onPrimary),
+                                  color: Theme.of(context).colorScheme.onPrimary,
+                                ),
                               ),
                             ],
                           ),
                         ),
                       ),
-                      const Gap(5),
-                      const Expanded(child: DateBarWidget()),
+                      const Expanded(
+                        child: DateBarWidget(),
+                      ),
                     ],
                   ),
                   const SizedBox(

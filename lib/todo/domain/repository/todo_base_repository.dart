@@ -26,4 +26,5 @@ abstract class TodoBaseRepository {
   Future<Either<Failure, List<Task>>> searchTasks({
     required String dateTime,
   });
+  Future<Either<Failure, List<Task>>> reorderTasks({required int oldIndex, required int newIndex});
 }

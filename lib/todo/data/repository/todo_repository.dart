@@ -76,4 +76,17 @@ class TodoRepository extends TodoBaseRepository {
       return Left(LocalFailure(e.errorMessageModel.errorMessage));
     }
   }
+
+  @override
+  Future<Either<Failure, List<Task>>> reorderTasks({required int oldIndex, required int newIndex}) async{
+    try {
+      final result = await todoBaseDataSource.reorderTasks(
+        oldIndex: oldIndex,
+        newIndex: newIndex
+      );
+      return Right(result);
+    } on ServerException catch (e) {
+      return Left(LocalFailure(e.errorMessageModel.errorMessage));
+    }
+  }
 }

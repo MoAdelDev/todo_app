@@ -11,6 +11,7 @@ import 'package:todo/todo/domain/entities/task.dart';
 import 'package:todo/todo/domain/usecase/delete_task_usecase.dart';
 import 'package:todo/todo/domain/usecase/get_tasks_usecase.dart';
 import 'package:todo/todo/domain/usecase/insert_task_usecase.dart';
+import 'package:todo/todo/domain/usecase/reorder_tasks_usecase.dart';
 import 'package:todo/todo/domain/usecase/satisfy_task_usecase.dart';
 import 'package:todo/todo/domain/usecase/search_tasks_usecase.dart';
 import 'package:todo/todo/domain/usecase/update_task_usecase.dart';
@@ -28,6 +29,7 @@ class HomeBloc extends Bloc<HomeBaseEvent, HomeState> {
   final UpdateTaskUseCase updateTaskUseCase;
   final SatisfyTaskUseCase satisfyTaskUseCase;
   final SearchTasksUseCase searchTasksUseCase;
+  final ReorderTasksUseCase reorderTasksUseCase;
 
   HomeBloc(
     this.getTasksUseCase,
@@ -36,6 +38,7 @@ class HomeBloc extends Bloc<HomeBaseEvent, HomeState> {
     this.updateTaskUseCase,
     this.satisfyTaskUseCase,
     this.searchTasksUseCase,
+    this.reorderTasksUseCase,
   ) : super(const HomeState()) {
     on<HomeChangeThemeModeEvent>(_changeThemeMode);
     on<HomeGetTasksEvent>(_getTasks);
@@ -44,6 +47,7 @@ class HomeBloc extends Bloc<HomeBaseEvent, HomeState> {
     on<HomeUpdateTaskEvent>(_updateTask);
     on<HomeSatisfyTaskEvent>(_satisfyTask);
     on<HomeSearchTasksEvent>(_searchTasks);
+    on<HomeReorderTasksEvent>(_reOrderTasks);
   }
 
   FutureOr<void> _changeThemeMode(
@@ -52,6 +56,7 @@ class HomeBloc extends Bloc<HomeBaseEvent, HomeState> {
     CacheHelper.saveData(key: 'isDark', value: MyApp.isDark);
     emit(state.copyWith(isDark: !state.isDark));
   }
+
   FutureOr<void> _getTasks(
       HomeGetTasksEvent event, Emitter<HomeState> emit) async {
     final result = await getTasksUseCase();
@@ -169,8 +174,9 @@ class HomeBloc extends Bloc<HomeBaseEvent, HomeState> {
     });
   }
 
-  FutureOr<void> _searchTasks(HomeSearchTasksEvent event, Emitter<HomeState> emit) async{
-    final String dateTime=DateFormat('dd/MM/yyyy').format(event.dateTime);
+  FutureOr<void> _searchTasks(
+      HomeSearchTasksEvent event, Emitter<HomeState> emit) async {
+    final String dateTime = DateFormat('dd/MM/yyyy').format(event.dateTime);
     final result = await searchTasksUseCase(dateTime: dateTime);
     result.fold((error) {
       emit(state.copyWith(
@@ -178,7 +184,7 @@ class HomeBloc extends Bloc<HomeBaseEvent, HomeState> {
     }, (tasks) {
       List<Task> finalTasks = tasks;
       finalTasks.sort(
-            (a, b) {
+        (a, b) {
           if (a.isCompleted == 0 && b.isCompleted == 1) {
             return 0;
           } else if (a.isCompleted == 1 && b.isCompleted == 0) {
@@ -188,6 +194,17 @@ class HomeBloc extends Bloc<HomeBaseEvent, HomeState> {
         },
       );
       emit(state.copyWith(tasks: finalTasks, tasksState: RequestState.success));
+    });
+  }
+
+  FutureOr<void> _reOrderTasks(
+      HomeReorderTasksEvent event, Emitter<HomeState> emit) async{
+    final tasks = state.tasks;
+    final task = tasks.removeAt(event.oldIndex);
+    tasks.insert(event.newIndex, task);
+    final result = await reorderTasksUseCase(oldIndex: event.oldIndex, newIndex: event.newIndex);
+    result.fold((left) {}, (tasks) {
+      emit(state.copyWith(tasks: tasks));
     });
   }
 }

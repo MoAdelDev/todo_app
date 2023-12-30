@@ -45,3 +45,9 @@ class HomeSearchTasksEvent extends HomeBaseEvent {
 
   const HomeSearchTasksEvent(this.dateTime);
 }
+
+class HomeReorderTasksEvent extends HomeBaseEvent{
+  final int oldIndex;
+  final int newIndex;
+  const HomeReorderTasksEvent(this.oldIndex, this.newIndex);
+}
